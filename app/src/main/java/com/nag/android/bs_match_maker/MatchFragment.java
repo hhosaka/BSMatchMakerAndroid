@@ -21,6 +21,9 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Toast;
+
+import java.io.IOException;
 
 public class MatchFragment extends Fragment implements OnItemClickListener{
 	private static final String ARG_ROUND = "round";
@@ -61,7 +64,11 @@ public class MatchFragment extends Fragment implements OnItemClickListener{
 		buttonFix.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View arg0) {
-				getGame().bind();//TODO
+                try {
+                    getGame().bind(getActivity());//TODO
+                }catch(IOException e){
+                    Toast.makeText(getActivity(),e.toString(),Toast.LENGTH_LONG);
+                }
 				setUIByStatus();
 			}
 		});

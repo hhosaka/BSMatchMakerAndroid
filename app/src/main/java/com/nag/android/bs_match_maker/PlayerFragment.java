@@ -64,18 +64,19 @@ public class PlayerFragment extends Fragment implements OnUpdatePlayersListener,
 		private LayoutInflater inflater = null;
 
 		public InternalAdapter(Context context,Player[]players) {
-			super(context, 0,players);
+			super(context, android.R.layout.simple_list_item_1,players);
 			this.inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            sort(new Player.ComparisonWithId());
 		}
 
-		@Override
-		public View getView(int position, View convertView, ViewGroup parent) {
-			if(convertView==null){
-				 convertView = inflater.inflate(R.layout.view_player_item, parent, false);
-			}
-			((TextView)convertView.findViewById(R.id.textViewName)).setText(getItem(position).getName());
-			return convertView;
-		}
+//		@Override
+//		public View getView(int position, View convertView, ViewGroup parent) {
+//			if(convertView==null){
+//				 convertView = inflater.inflate(R.layout.view_player_item, parent, false);
+//			}
+//			((TextView)convertView.findViewById(R.id.textViewName)).setText(getItem(position).getName());
+//			return convertView;
+//		}
 	}
 
 	@Override

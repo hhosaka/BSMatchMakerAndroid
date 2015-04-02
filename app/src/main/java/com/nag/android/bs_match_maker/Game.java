@@ -175,13 +175,8 @@ public class Game implements Serializable{
 			}
 		}
 	}
-	public void bind() {
+	public void bind(Context context) throws IOException{
 		getLatestRound().bind();
-		Game.save(this);
-	}
-
-	public static boolean save(Game game){
-
-		return false;
+		Game.save(context, this);
 	}
 }

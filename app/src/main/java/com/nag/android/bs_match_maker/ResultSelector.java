@@ -30,18 +30,18 @@ public class ResultSelector extends RadioGroup implements DialogInterface.OnClic
 	
 	private void init(Context context, Match match, boolean isThreePointMatch){
 		if(isThreePointMatch){
-			add(context, match, "2-0");
-			add(context, match, "2-1");
-			add(context, match, "1-0");
-			add(context, match, "1-1");
-			add(context, match, "0-0");
-			add(context, match, "0-1");
-			add(context, match, "1-2");
-			add(context, match, "0-2");
+			add(context, match, "2-0:"+match.getPlayers()[0].getName()+" win");
+			add(context, match, "2-1:"+match.getPlayers()[0].getName()+" win");
+			add(context, match, "1-0:"+match.getPlayers()[0].getName()+" win");
+			add(context, match, "1-1:Draw");
+			add(context, match, "0-0:Draw");
+			add(context, match, "0-1:"+match.getPlayers()[1].getName()+" win");
+			add(context, match, "1-2:"+match.getPlayers()[1].getName()+" win");
+			add(context, match, "0-2:"+match.getPlayers()[1].getName()+" win");
 		}else{
-			add(context, match, "1-0");
-			add(context, match, "0-0");
-			add(context, match, "0-1");
+			add(context, match, "1-0:"+match.getPlayers()[0].getName()+" win");
+			add(context, match, "0-0:Draw");
+			add(context, match, "0-1:"+match.getPlayers()[0].getName()+" win");
 		}
 	}
 

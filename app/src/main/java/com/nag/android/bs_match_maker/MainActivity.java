@@ -19,6 +19,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.NumberPicker;
 import android.widget.Toast;
@@ -30,6 +31,9 @@ public class MainActivity extends Activity implements ActionBar.TabListener,
 	private final int MIN_PLAYER = 2;
 	private static final String ARG_GAME = "game";
 	private OnUpdatePlayersListener onupdateplayerslistener;
+//    Button buttonFix;
+//    Button buttonStart;
+//    Button buttonShuffle;
 
 	private Game game = null;
 	SectionsPagerAdapter mSectionsPagerAdapter;
@@ -56,6 +60,11 @@ public class MainActivity extends Activity implements ActionBar.TabListener,
 			@Override
 			public void onPageSelected(int position) {
 				actionBar.setSelectedNavigationItem(position);
+                if(position ==0 || position!=actionBar.getTabCount()-1){
+                    findViewById(R.id.layoutButtons).setVisibility(View.GONE);
+                }else{
+                    findViewById(R.id.layoutButtons).setVisibility(View.VISIBLE);
+                }
 			}
 		});
 
