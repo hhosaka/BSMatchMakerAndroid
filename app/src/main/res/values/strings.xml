@@ -10,5 +10,6 @@
     <string name="action_initial">Initial</string>
     <string name="pref_number"></string>
     <string name="action_open">Open</string>
+    <string name="action_delete">Delete</string>
 
 </resources>

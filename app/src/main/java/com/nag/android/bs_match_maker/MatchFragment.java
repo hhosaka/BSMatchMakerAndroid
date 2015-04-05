@@ -25,7 +25,7 @@ import android.widget.Toast;
 
 import java.io.IOException;
 
-public class MatchFragment extends Fragment implements OnItemClickListener{
+public class MatchFragment extends Fragment implements OnItemClickListener, ResultSelector.OnResultListener{
 	private static final String ARG_ROUND = "round";
 	private int round;// TODO
 	private ListView listview = null;
@@ -130,26 +130,31 @@ public class MatchFragment extends Fragment implements OnItemClickListener{
 	@Override
 	public void onItemClick(final AdapterView<?> adapter, final View view,final int position, long id) {
 		final Match match = (Match)adapter.getItemAtPosition(position);
-		final ResultSelector resultselector = new ResultSelector(getActivity(), match, false);
-		new AlertDialog.Builder(getActivity())
-			.setIcon(android.R.drawable.ic_dialog_info)
-			.setTitle(match.toString())
-			.setView(resultselector)
-			.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-				@Override
-				public void onClick(DialogInterface dialog, int which) {
-					resultselector.onClick(dialog, which);
-					adapter.getAdapter().getView(position, view, listview);
-					if(update()){
-						timerview.stop();
-					}
-				}
-			})
-			.setNegativeButton("Cancel", null)
-			.show();
+        new ResultSelector(view.getContext(), getGame(),match).show(new ResultSelector.OnResultListener() {
+            @Override
+            public void onSelected() {
+                adapter.getAdapter().getView(position, view, listview);
+                if(update()){
+                    timerview.stop();
+                }
+            }
+        });
+
+//		final ResultSelector resultselector = new ResultSelector(getActivity(), match, false);
+//		new AlertDialog.Builder(getActivity())
+//			.setIcon(android.R.drawable.ic_dialog_info)
+//			.setTitle(match.toString())
+//			.setView(resultselector)
+//			.setNegativeButton("Cancel", null)
+//			.show();
 	}
 
-	private class InternalAdapter extends ArrayAdapter<Match>{
+    @Override
+    public void onSelected() {
+
+    }
+
+    private class InternalAdapter extends ArrayAdapter<Match>{
 
 		private LayoutInflater inflater;
 		public InternalAdapter(Context context, Match[] matches) {

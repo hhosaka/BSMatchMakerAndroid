@@ -1,53 +1,82 @@
 package com.nag.android.bs_match_maker;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.view.View;
-import android.view.View.OnClickListener;
 
-public class ResultSelector extends RadioGroup implements DialogInterface.OnClickListener {
+import com.nag.android.util.AbstractCharSequence;
+import com.nag.android.util.LabeledItem;
 
+public class ResultSelector extends RadioGroup {
+
+    public interface OnResultListener{
+        void onSelected();
+    }
+    private static class LabeledResult extends LabeledItem<Result>{
+        public LabeledResult(String label, Result value) {
+            super(label, value);
+        }
+    }
+
+    private Game game;
 	private Match match;
-	private int id=0;
-	public ResultSelector(Context context, Match match, boolean isThreePointMatch) {
+
+	public ResultSelector(Context context, Game game, Match match) {
 		super(context);
+        this.game = game;
 		this.match = match;
-		init(context, match, isThreePointMatch);
 	}
 
-	private void add(Context context, Match match, String label){
-		RadioButton radiobutton = new RadioButton(context);
-		radiobutton.setText(label);
-		radiobutton.setId(++id);
-		addView(radiobutton);
-		if(label.equals(match.getLabel())){
-			check(radiobutton.getId());
-		}
-	}
-
-	
-	private void init(Context context, Match match, boolean isThreePointMatch){
-		if(isThreePointMatch){
-			add(context, match, "2-0:"+match.getPlayers()[0].getName()+" win");
-			add(context, match, "2-1:"+match.getPlayers()[0].getName()+" win");
-			add(context, match, "1-0:"+match.getPlayers()[0].getName()+" win");
-			add(context, match, "1-1:Draw");
-			add(context, match, "0-0:Draw");
-			add(context, match, "0-1:"+match.getPlayers()[1].getName()+" win");
-			add(context, match, "1-2:"+match.getPlayers()[1].getName()+" win");
-			add(context, match, "0-2:"+match.getPlayers()[1].getName()+" win");
+	private LabeledResult[] getLabels(){
+		if(game.isThreePointMatch){
+            return new LabeledResult[]{
+			new LabeledResult("2-0:"+match.getPlayers()[0].getName()+" win", new Result(2,0)),
+            new LabeledResult("2-1:"+match.getPlayers()[0].getName()+" win", new Result(2,1)),
+            new LabeledResult("1-0:"+match.getPlayers()[0].getName()+" win", new Result(1,0)),
+            new LabeledResult("1-1:Draw", new Result(1,1)),
+            new LabeledResult("0-0:Draw", new Result(0,0)),
+            new LabeledResult("0-1:"+match.getPlayers()[1].getName()+" win", new Result(0, 1)),
+            new LabeledResult("1-2:"+match.getPlayers()[1].getName()+" win", new Result(1, 2)),
+            new LabeledResult("0-2:"+match.getPlayers()[1].getName()+" win", new Result(0, 2))};
 		}else{
-			add(context, match, "1-0:"+match.getPlayers()[0].getName()+" win");
-			add(context, match, "0-0:Draw");
-			add(context, match, "0-1:"+match.getPlayers()[0].getName()+" win");
+            return new LabeledResult[]{
+                    new LabeledResult("1-0:"+match.getPlayers()[0].getName()+" win", new Result(1,0)),
+                    new LabeledResult("0-0:Draw", new Result(0,0)),
+                    new LabeledResult("0-1:"+match.getPlayers()[1].getName()+" win", new Result(0,1))};
 		}
 	}
 
-	@Override
-	public void onClick(DialogInterface dialog, int which) {
-		String title = ((RadioButton)findViewById(this.getCheckedRadioButtonId())).getText().toString();
-		match.Update(Integer.valueOf(title.substring(0,1)),Integer.valueOf(title.substring(2,3)));
-	}
+    private int getCurrentPosition(LabeledResult[] items){
+        if(match.getStatus()== Match.STATUS.DONE) {
+            for (int i = 0; i < items.length; ++i) {
+                if(items[i].equals(match.getResult())){
+                    return i;
+                }
+            }
+            throw new UnsupportedOperationException();
+        }else {
+            return -1;
+        }
+    }
+
+    public void show(final OnResultListener listener){
+        final LabeledResult[] items = getLabels();
+        new AlertDialog.Builder(getContext())
+            .setIcon(android.R.drawable.ic_dialog_info)
+            .setTitle(match.toString())
+            .setSingleChoiceItems(items, getCurrentPosition(items), new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int whichButton) {
+                    if (whichButton >= 0) {
+                        match.Update(items[whichButton].getValue());
+                        listener.onSelected();
+                        dialog.dismiss();
+                    }
+                }
+            })
+            .setNegativeButton("Cancel", null)
+            .show();
+    }
 }

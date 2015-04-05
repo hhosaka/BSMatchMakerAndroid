@@ -7,11 +7,12 @@ class Match implements Serializable{
 	private final int PLAYER1 = 0;
 	private final int PLAYER2 = 1;
 	private static final Player BYE = new Player(0, "BYE");
-	private int[] points = new int[2];
+//	private int[] points = new int[2];
 	private int id;
 	private String label = null;
 	private STATUS status;
 	private Player[] players = new Player[2];
+    private Result result = new Result();
 
 	public enum STATUS { UNDEF, MATCHING, READY, PLAYING, DONE };
 
@@ -23,16 +24,13 @@ class Match implements Serializable{
 		return status;
 	}
 
-	public String getLabel(){
-		if(label == null){
-			label = points[0]+"-"+points[1];
-		}
-		return label;
-	}
-
-	public void Update(int player1_point, int player2_point) {
-		points[PLAYER1] = player1_point;
-		points[PLAYER2] = player2_point;
+    public Result getResult(){
+        return result;
+    }
+	public void Update(Result result) {
+        this.result = result;
+//		points[PLAYER1] = player1_point;
+//		points[PLAYER2] = player2_point;
 		label = null;
 		status = STATUS.DONE;
 	}
@@ -50,7 +48,8 @@ class Match implements Serializable{
 
 	Match(int id, Player player, int fullpoint){
 		this(id,player,BYE);
-		this.points[0] = fullpoint;
+        this.result = new Result(fullpoint,0);
+		//this.points[0] = fullpoint;
 		status = STATUS.DONE;
 	}
 
@@ -64,10 +63,6 @@ class Match implements Serializable{
 		}
 	}
 
-	public boolean IsTarget(int player1_point, int player2_point) {
-		return points[PLAYER1] == player1_point && points[PLAYER2] == player2_point;
-	}
-
 	private int MyIndex(Player player) {
 		return this.players[PLAYER1] == player ? PLAYER1 : PLAYER2;
 	}
@@ -77,7 +72,7 @@ class Match implements Serializable{
 	}
 
 	private int GetMyPoint(Player player) {
-		return this.points[MyIndex(player)];
+		return this.result.getPoint(MyIndex(player));
 	}
 
 	public int GetOpponentMatchPoint(Player player) {
@@ -85,7 +80,7 @@ class Match implements Serializable{
 	}
 
 	private int GetOpponentPoint(Player player) {
-		return this.points[OpponentIndex(player)];
+		return this.result.getPoint(OpponentIndex(player));
 	}
 
 	void bind() {
@@ -103,7 +98,7 @@ class Match implements Serializable{
 	private String getSeparator(){
 		switch(getStatus()){
 		case DONE:
-			return "["+ getLabel() + "]";
+			return "["+ result.toString() + "]";
 		case MATCHING:
 		case READY:
 		case PLAYING:

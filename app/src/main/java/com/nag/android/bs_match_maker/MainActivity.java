@@ -101,6 +101,9 @@ public class MainActivity extends Activity implements ActionBar.TabListener,
 		case R.id.action_open:
 			openGame();
 			return false;
+        case R.id.action_delete:
+            DataDeleter.show(this,"Delete Save");
+            return false;
 		}
 		return super.onOptionsItemSelected(item);
 	}
