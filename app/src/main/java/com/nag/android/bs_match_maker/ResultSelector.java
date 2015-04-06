@@ -51,7 +51,7 @@ public class ResultSelector extends RadioGroup {
     private int getCurrentPosition(LabeledResult[] items){
         if(match.getStatus()== Match.STATUS.DONE) {
             for (int i = 0; i < items.length; ++i) {
-                if(items[i].equals(match.getResult())){
+                if(items[i].getValue().equals(match.getResult())){
                     return i;
                 }
             }

@@ -2,7 +2,10 @@ package com.nag.android.bs_match_maker;
 
 import com.nag.android.util.AbstractCharSequence;
 
-class Result {
+import java.io.Serializable;
+
+class Result implements Serializable{
+    private static final long serialVersionUID = Game.serialVersionUID;
     private int[] point;
 
     Result(int point1, int point2){
@@ -15,6 +18,11 @@ class Result {
 
     public int getPoint(int index) {
         return point[index];
+    }
+
+    @Override
+    public String toString() {
+        return point[0]+"-"+point[1];
     }
 
     @Override

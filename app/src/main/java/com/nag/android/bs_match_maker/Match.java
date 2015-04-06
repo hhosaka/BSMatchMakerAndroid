@@ -7,7 +7,6 @@ class Match implements Serializable{
 	private final int PLAYER1 = 0;
 	private final int PLAYER2 = 1;
 	private static final Player BYE = new Player(0, "BYE");
-//	private int[] points = new int[2];
 	private int id;
 	private String label = null;
 	private STATUS status;
@@ -29,8 +28,6 @@ class Match implements Serializable{
     }
 	public void Update(Result result) {
         this.result = result;
-//		points[PLAYER1] = player1_point;
-//		points[PLAYER2] = player2_point;
 		label = null;
 		status = STATUS.DONE;
 	}
@@ -49,7 +46,6 @@ class Match implements Serializable{
 	Match(int id, Player player, int fullpoint){
 		this(id,player,BYE);
         this.result = new Result(fullpoint,0);
-		//this.points[0] = fullpoint;
 		status = STATUS.DONE;
 	}
 
