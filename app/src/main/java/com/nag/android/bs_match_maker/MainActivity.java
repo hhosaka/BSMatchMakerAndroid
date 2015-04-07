@@ -2,8 +2,6 @@ package com.nag.android.bs_match_maker;
 
 import java.io.IOException;
 
-import com.nag.android.bs_match_maker.Match.STATUS;
-
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -19,7 +17,6 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.NumberPicker;
 import android.widget.Toast;
@@ -76,11 +73,11 @@ public class MainActivity extends Activity implements ActionBar.TabListener,
 		}
 	}
 
-	private void addTab(int round) {
+	private void addTab() {
 		final ActionBar actionBar = getActionBar();
 		actionBar.addTab(
 				actionBar.newTab()
-					.setText(mSectionsPagerAdapter.getPageTitle(round))
+					.setText(mSectionsPagerAdapter.getPageTitle(mSectionsPagerAdapter.getCount()))
 					.setTabListener(this));
 		mSectionsPagerAdapter.notifyDataSetChanged();
 	}
@@ -115,6 +112,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener,
 				if(filename!=null){
 					try {
 						game = Game.load(MainActivity.this, filename);
+                        update(Game.UPDATE_MODE.CREATE);
 					} catch (ClassNotFoundException e) {
 						Toast.makeText(MainActivity.this, "Corrupted data", Toast.LENGTH_LONG);
 					} catch (IOException e) {
@@ -141,7 +139,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener,
 				game.initial(Player.create(np.getValue()),cb.isChecked());
 				if(onupdateplayerslistener!=null){
 					onupdateplayerslistener.onUpdatePlayer(game.getPlayers());
-					addTab(game.make());
+					addTab();
 				}
 			}
 		})
@@ -213,12 +211,18 @@ public class MainActivity extends Activity implements ActionBar.TabListener,
 	}
 
 	@Override
-	public boolean update() {
+	public void update(Game.UPDATE_MODE mode) {
 		this.onupdateplayerslistener.onUpdatePlayer(game.getPlayers());
-		if(game.getLatestRound().getStatus()==STATUS.DONE){
-			addTab(game.make());
-			return true;
-		}
-		return false;
+        switch(mode){
+            case ADD:
+                addTab();
+                break;
+            case CREATE:
+                mViewPager.removeAllViews();
+                for(int i=0;i<game.getCount()+1;++i){
+                    addTab();
+                }
+                break;
+        }
 	}
 }

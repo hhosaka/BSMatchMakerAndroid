@@ -14,6 +14,7 @@ import java.util.Stack;
 import com.nag.android.util.PreferenceHelper;
 
 import android.content.Context;
+import android.util.Log;
 
 public class Game implements Serializable{
 	static final long serialVersionUID = 1L;
@@ -27,9 +28,10 @@ public class Game implements Serializable{
     private Player[] players = new Player[0];
     private Stack<Round> Rounds = new Stack<Round>();
 
+    enum UPDATE_MODE{DATA,ADD,CREATE};
 	interface GameHolder{
 		Game getGame();
-		boolean update();
+		void update(UPDATE_MODE mode);
 	}
 
 	public int getCount(){
@@ -62,9 +64,15 @@ public class Game implements Serializable{
 	public static Game load(Context context) throws IOException, ClassNotFoundException{
 		return load(context, PreferenceHelper.getInstance(context).getLong(PROP_CURRENT_FILENAME, 0)+OPTION);
 	}
+
 	public static Game load(Context context, String filename) throws IOException, ClassNotFoundException{
 		ObjectInputStream o = new ObjectInputStream(context.openFileInput(filename));// TODO
 		Game game = (Game)o.readObject();
+        for(Round round:game.Rounds){
+            for(Match match:round.getMatches()){
+                match.restore(game.getPlayers());
+            }
+        }
 		o.close();
 		return game;
 	}

@@ -2,25 +2,19 @@ package com.nag.android.bs_match_maker;
 
 import com.nag.android.bs_match_maker.Match.STATUS;
 
-import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import java.io.IOException;
@@ -47,10 +41,6 @@ public class MatchFragment extends Fragment implements OnItemClickListener, Resu
 
 	private Game getGame(){
 		return ((Game.GameHolder)getActivity()).getGame();
-	}
-
-	private boolean update(){
-		return ((Game.GameHolder)getActivity()).update();
 	}
 
 	@Override
@@ -102,23 +92,29 @@ public class MatchFragment extends Fragment implements OnItemClickListener, Resu
 		case MATCHING:
 			timerview.setVisibility(View.GONE);
 			buttonFix.setEnabled(true);
+            buttonFix.setVisibility(View.VISIBLE);
 			buttonStart.setEnabled(false);
-			buttonShuffle.setEnabled(true);
+            buttonStart.setVisibility(View.VISIBLE);
+            buttonShuffle.setEnabled(true);
+			buttonShuffle.setVisibility(View.VISIBLE);
 			listview.setEnabled(false);
 			break;
 		case READY:
 			timerview.setVisibility(View.GONE);
+            buttonFix.setVisibility(View.VISIBLE);
 			buttonFix.setEnabled(false);
-			buttonStart.setEnabled(true);
+			buttonStart.setVisibility(View.VISIBLE);
+            buttonStart.setEnabled(true);
+            buttonShuffle.setVisibility(View.VISIBLE);
 			buttonShuffle.setEnabled(false);
 			listview.setEnabled(false);
 			break;
 		case PLAYING:
 		case DONE:
 			timerview.setVisibility(View.VISIBLE);
-			buttonFix.setEnabled(false);
-			buttonStart.setEnabled(false);
-			buttonShuffle.setEnabled(false);
+            buttonFix.setVisibility(View.GONE);
+            buttonStart.setVisibility(View.GONE);
+            buttonShuffle.setVisibility(View.GONE);
 			listview.setEnabled(true);
 			break;
 		}
@@ -134,8 +130,12 @@ public class MatchFragment extends Fragment implements OnItemClickListener, Resu
             @Override
             public void onSelected() {
                 adapter.getAdapter().getView(position, view, listview);
-                if(update()){
+                if(getGame().getLatestRound().getStatus()==STATUS.DONE){
+                    getGame().make();
                     timerview.stop();
+                    ((Game.GameHolder)getActivity()).update(Game.UPDATE_MODE.ADD);
+                }else{
+                    ((Game.GameHolder)getActivity()).update(Game.UPDATE_MODE.DATA);
                 }
             }
         });
