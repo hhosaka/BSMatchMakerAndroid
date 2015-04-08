@@ -77,7 +77,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener,
 		final ActionBar actionBar = getActionBar();
 		actionBar.addTab(
 				actionBar.newTab()
-					.setText(mSectionsPagerAdapter.getPageTitle(mSectionsPagerAdapter.getCount()))
+					.setText(mSectionsPagerAdapter.getPageTitle(actionBar.getTabCount()))
 					.setTabListener(this));
 		mSectionsPagerAdapter.notifyDataSetChanged();
 	}
@@ -136,10 +136,11 @@ public class MainActivity extends Activity implements ActionBar.TabListener,
 		.setPositiveButton("OK", new OnClickListener(){
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
-				game.initial(Player.create(np.getValue()),cb.isChecked());
+				game = new Game(Player.create(np.getValue()),cb.isChecked());
+                game.make();
+                update(Game.UPDATE_MODE.CREATE);
 				if(onupdateplayerslistener!=null){
 					onupdateplayerslistener.onUpdatePlayer(game.getPlayers());
-					addTab();
 				}
 			}
 		})
@@ -218,7 +219,10 @@ public class MainActivity extends Activity implements ActionBar.TabListener,
                 addTab();
                 break;
             case CREATE:
-                mViewPager.removeAllViews();
+                final ActionBar actionBar = getActionBar();
+                actionBar.removeAllTabs();
+                mSectionsPagerAdapter = new SectionsPagerAdapter(getFragmentManager());
+                mViewPager.setAdapter(mSectionsPagerAdapter);
                 for(int i=0;i<game.getCount()+1;++i){
                     addTab();
                 }

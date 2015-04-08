@@ -115,7 +115,7 @@ class Player implements Serializable{
 		if ((ret = comparison(a, b)) != 0) {
 			return ret;
 		} else {
-			return b.id - a.id;
+			return a.id - b.id;
 		}
 	}
 

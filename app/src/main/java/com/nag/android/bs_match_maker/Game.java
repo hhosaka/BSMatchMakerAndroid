@@ -25,7 +25,7 @@ public class Game implements Serializable{
 
     private String filename;
     public boolean isThreePointMatch;
-    private Player[] players = new Player[0];
+    private Player[] players = null;
     private Stack<Round> Rounds = new Stack<Round>();
 
     enum UPDATE_MODE{DATA,ADD,CREATE};
@@ -81,10 +81,14 @@ public class Game implements Serializable{
 		return players;
 	}
 
-	public void initial(Player[] players,boolean isThreePointMatch){
-		this.players = players;
-		this.isThreePointMatch = isThreePointMatch;
-	}
+    Game(){
+        this(new Player[0],false);
+    }
+
+    Game(Player[]players, boolean isThreePointMatch){
+        this.players = players;
+        this.isThreePointMatch = isThreePointMatch;
+    }
 
 	private static int randomswap(Player a, Player b) {
 		return rand.nextInt(3)-1;
