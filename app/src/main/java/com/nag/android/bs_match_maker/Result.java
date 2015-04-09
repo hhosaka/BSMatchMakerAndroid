@@ -19,6 +19,7 @@ class Result implements Serializable{
     public int getPoint(int index) {
         return point[index];
     }
+    public int getDiff(){return point[0]-point[1];}
 
     @Override
     public String toString() {

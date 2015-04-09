@@ -54,7 +54,9 @@ public class PlayerFragment extends Fragment implements OnUpdatePlayersListener,
 	@Override
 	public void onUpdatePlayer(Player[] players) {
 		InternalAdapter adapter = new InternalAdapter(getActivity(), players);
-		listview.setAdapter(adapter);
+        if(listview!=null) {// TODO
+            listview.setAdapter(adapter);
+        }
 		//adapter.sort(new Player.ComparisonWithId());
 		//adapter.notifyDataSetChanged();
 	}
@@ -80,21 +82,25 @@ public class PlayerFragment extends Fragment implements OnUpdatePlayersListener,
 	}
 
 	@Override
-	public void onItemClick(AdapterView<?> adapter, View view, int position, long id) {
+	public void onItemClick(AdapterView<?> adapter, final View view, final int position, long id) {
 		final Player player = (Player)adapter.getItemAtPosition(position);
-		final EditText editView = new EditText(getActivity());
+
+        View layout = getActivity().getLayoutInflater().inflate(R.layout.layout_player_information, null);
+		final EditText editView = (EditText)layout.findViewById(R.id.editTextName);
+        ((ListView)layout.findViewById(R.id.listViewLog)).setAdapter(new ArrayAdapter<String>(view.getContext(),android.R.layout.simple_list_item_1,player.getLog()));
 		editView.setText(player.getName());
 		new AlertDialog.Builder(getActivity())
 			.setIcon(android.R.drawable.ic_dialog_info)
-			.setTitle("Player name")
-			.setView(editView)
-			.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+			.setTitle(getString(R.string.label_player))
+			.setView(layout)
+			.setPositiveButton(getString(R.string.label_ok), new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int whichButton) {
 					player.setName(editView.getText().toString());
-				}
+                    listview.getAdapter().getView(position, view, listview);
+
+                }
 			})
-			.setNegativeButton("Cancel", null)
+			.setNegativeButton(getString(R.string.label_cancel), null)
 			.show();
 	}
-
 }

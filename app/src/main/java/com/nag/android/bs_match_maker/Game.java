@@ -19,12 +19,13 @@ import android.util.Log;
 public class Game implements Serializable{
 	static final long serialVersionUID = 1L;
 	private static final String PROP_CURRENT_FILENAME = "current_filename";
+    private static final String TEMP_FILENAME = "auto_save";
 	private static final String OPTION = ".bsmm";
 
     private static Random rand = new Random();
 
-    private String filename;
-    public boolean isThreePointMatch;
+    private String filename = null;
+    public boolean isThreePointMatch = false;
     private Player[] players = null;
     private Stack<Round> Rounds = new Stack<Round>();
 
@@ -47,23 +48,32 @@ public class Game implements Serializable{
 		void onUpdatePlayer();
 	}
 
-
-
-//	public Player[] sortByRank() {
-//		return Player.OrderByRank(players);
-//	}
-
-	public void save(Context context) throws IOException{
-        filename = new SimpleDateFormat("yyyy-MM-dd hh:mm").format(new Date())+OPTION;
-        ObjectOutputStream o = new ObjectOutputStream(context.openFileOutput(filename, 0));
-		o.writeObject(this);
-		o.close();
-		PreferenceHelper.getInstance(context).putString(PROP_CURRENT_FILENAME, filename);
+	public void save(Context context,boolean isTemporary) throws IOException{
+        if(Rounds.size()>0) {
+            String filename;
+            if (isTemporary) {
+                filename = TEMP_FILENAME;
+            } else {
+                if (this.filename == null) {
+                    this.filename = new SimpleDateFormat("yyyy-MM-dd hh:mm").format(new Date());
+                }
+                filename = this.filename;
+            }
+            filename += OPTION;
+            ObjectOutputStream o = new ObjectOutputStream(context.openFileOutput(filename, 0));
+            o.writeObject(this);
+            o.close();
+        }
 	}
 
-	public static Game load(Context context) throws IOException, ClassNotFoundException{
-		return load(context, PreferenceHelper.getInstance(context).getLong(PROP_CURRENT_FILENAME, 0)+OPTION);
-	}
+
+    public static Game load(Context context) throws IOException, ClassNotFoundException{
+        String filename = PreferenceHelper.getInstance(context).getString(TEMP_FILENAME,null);
+        if(filename != null) {
+            return load(context, filename);
+        }
+        return new Game();
+    }
 
 	public static Game load(Context context, String filename) throws IOException, ClassNotFoundException{
 		ObjectInputStream o = new ObjectInputStream(context.openFileInput(filename));// TODO
@@ -122,20 +132,25 @@ public class Game implements Serializable{
 		return ret;
 	}
 
-	public int make(int count) {
-		for(int i=0; i<count; ++i){
-			int ret = make();
-			if(ret>0){
-				return ret;
-			}
+    private final int MAX_TRY_COUNT = 10;
+
+	public boolean make() {
+        if (Rounds.size()>0 && getLatestRound().getStatus() == Match.STATUS.MATCHING
+                ||Rounds.size()>0 && getLatestRound().getStatus() == Match.STATUS.UNDEF) {
+            Rounds.pop();
+        }
+		for(int i=0; i<MAX_TRY_COUNT; ++i){
+			Round ret = makeOne();
+            if(ret!=null){
+                Rounds.push(ret);
+                return true;
+            }
 		}
-		return -1;
+        Rounds.push(new Round(Rounds.size()+1));
+        return false;
 	}
 
-	int make() {
-		if (Rounds.size()>0 && getLatestRound().getStatus() == Match.STATUS.MATCHING) {
-			Rounds.pop();
-		}
+	private Round makeOne() {
 		int id = 0;
 		Round ret = new Round(Rounds.size()+1);
 		Arrays.sort(players,new RandomSwap());
@@ -156,11 +171,13 @@ public class Game implements Serializable{
 				}
 			}
 		}
+        if(stack.size()>1){
+            return null;
+        }
 		if (stack.size() > 0) {
 			ret.add(new Match(++id, stack.pop(),isThreePointMatch?2:1));
 		}
-		Rounds.push(ret);
-		return Rounds.size();
+        return ret;
 	}
 
 	Round getLatestRound() {
@@ -175,6 +192,6 @@ public class Game implements Serializable{
 	}
 	public void bind(Context context) throws IOException{
 		getLatestRound().bind();
-		save(context);
+		save(context,true);
 	}
 }

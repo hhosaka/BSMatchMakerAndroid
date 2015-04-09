@@ -75,7 +75,9 @@ public class MatchFragment extends Fragment implements OnItemClickListener, Resu
 		buttonShuffle.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View arg0) {
-				getGame().make();
+				if(!getGame().make()){
+                    Toast.makeText(getActivity(),getString(R.string.message_round_create_error),Toast.LENGTH_LONG).show();
+                }
 				listview.setAdapter(new InternalAdapter(getActivity(), getRound().getMatches()));
 			}
 		});
@@ -89,6 +91,7 @@ public class MatchFragment extends Fragment implements OnItemClickListener, Resu
 
 	private void setUIByStatus(){
 		switch(getGame().getLatestRound().getStatus()){
+        case UNDEF:
 		case MATCHING:
 			timerview.setVisibility(View.GONE);
 			buttonFix.setEnabled(true);
@@ -131,7 +134,9 @@ public class MatchFragment extends Fragment implements OnItemClickListener, Resu
             public void onSelected() {
                 adapter.getAdapter().getView(position, view, listview);
                 if(getGame().getLatestRound().getStatus()==STATUS.DONE){
-                    getGame().make();
+                    if(!getGame().make()) {
+                        Toast.makeText(getActivity(), getString(R.string.message_round_create_error), Toast.LENGTH_LONG).show();
+                    }
                     timerview.stop();
                     ((Game.GameHolder)getActivity()).update(Game.UPDATE_MODE.ADD);
                 }else{

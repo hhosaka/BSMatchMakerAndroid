@@ -79,6 +79,24 @@ class Match implements Serializable{
 		return this.players[OpponentIndex(player)].getMatchPoint();
 	}
 
+    private Player getOpponent(Player player){return players[OpponentIndex(player)];}
+
+    private String getResultMark(Player player){
+        int point = result.getDiff();
+        if(point==0){
+            return "△";
+        }else if(point>0 && player==players[PLAYER1]
+                ||point<0 && player==players[PLAYER2]){
+            return "○";
+        }else{
+            return "×";
+        }
+    }
+
+    public String getLogString(Player player){
+        return getResultMark(player) + ":"+getOpponent(player).getName();
+    }
+
 	private int GetOpponentPoint(Player player) {
 		return this.result.getPoint(OpponentIndex(player));
 	}

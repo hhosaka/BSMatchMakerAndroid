@@ -32,20 +32,20 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Fix" />
+            android:text="@string/label_fix" />
 
         <Button
             android:id="@+id/buttonStart"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Start" />
+            android:text="@string/label_start" />
 
         <Button
             android:id="@+id/buttonShuffle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Shuffle" />
+            android:text="@string/label_shuffle" />
     </LinearLayout>
 </LinearLayout>

@@ -22,8 +22,12 @@ public class TimerView extends TextView {
 
 	private Timer timer = null;
 	private long initial;
-	public void start(){
-		initial = System.currentTimeMillis();
+    public void start(){
+        start(System.currentTimeMillis());
+    }
+
+	public void start(long tp){
+		initial = tp;
 		timer = new Timer(true);
 		timer.scheduleAtFixedRate(new TimerTask(){
 			@Override

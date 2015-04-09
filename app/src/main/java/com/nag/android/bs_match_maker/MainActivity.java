@@ -21,6 +21,8 @@ import android.widget.CheckBox;
 import android.widget.NumberPicker;
 import android.widget.Toast;
 
+import com.nag.android.util.PreferenceHelper;
+
 public class MainActivity extends Activity implements ActionBar.TabListener,
 														Game.GameHolder,
 														PlayerFragment.PlayersObserver{
@@ -44,14 +46,19 @@ public class MainActivity extends Activity implements ActionBar.TabListener,
 		if(savedInstanceState!=null){
 			game = (Game)savedInstanceState.getSerializable(ARG_GAME);
 		}else{
-			game = new Game();
-		}
+            try {
+                game = Game.load(this);
+            } catch (Exception e) {
+                Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
+                game = new Game();
+            }
+        }
 		final ActionBar actionBar = getActionBar();
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-		mSectionsPagerAdapter = new SectionsPagerAdapter(getFragmentManager());
+//		mSectionsPagerAdapter = new SectionsPagerAdapter(getFragmentManager());
 
 		mViewPager = (ViewPager) findViewById(R.id.pager);
-		mViewPager.setAdapter(mSectionsPagerAdapter);
+//		mViewPager.setAdapter(mSectionsPagerAdapter);
 
 		mViewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
 			@Override
@@ -65,21 +72,22 @@ public class MainActivity extends Activity implements ActionBar.TabListener,
 			}
 		});
 
-		for (int i = 0; i < mSectionsPagerAdapter.getCount(); i++) {
-			actionBar.addTab(
-					actionBar.newTab()
-					.setText(mSectionsPagerAdapter.getPageTitle(i))
-					.setTabListener(this));
-		}
+        update(Game.UPDATE_MODE.CREATE);
+//		for (int i = 0; i < mSectionsPagerAdapter.getCount(); i++) {
+//			actionBar.addTab(
+//					actionBar.newTab()
+//					.setText(mSectionsPagerAdapter.getPageTitle(i))
+//					.setTabListener(this));
+//		}
 	}
 
 	private void addTab() {
 		final ActionBar actionBar = getActionBar();
 		actionBar.addTab(
-				actionBar.newTab()
-					.setText(mSectionsPagerAdapter.getPageTitle(actionBar.getTabCount()))
-					.setTabListener(this));
-		mSectionsPagerAdapter.notifyDataSetChanged();
+                actionBar.newTab()
+                        .setText(mSectionsPagerAdapter.getPageTitle(actionBar.getTabCount()))
+                        .setTabListener(this));
+        mSectionsPagerAdapter.notifyDataSetChanged();
 	}
 
 	@Override
@@ -96,52 +104,63 @@ public class MainActivity extends Activity implements ActionBar.TabListener,
 			createGame();
 			return false;
 		case R.id.action_open:
-			openGame();
-			return false;
+            openGame();
+            return false;
+        case R.id.action_save:
+            try {
+                game.save(this, false);
+            } catch (IOException e) {
+                Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
+            }
+            return false;
         case R.id.action_delete:
-            DataDeleter.show(this,"Delete Save");
+            DataDeleter.show(this,getString(R.string.action_delete));
             return false;
 		}
 		return super.onOptionsItemSelected(item);
 	}
 
 	private void openGame(){
-		DataSelector.show(this, "Open Game", new DataSelector.ResultListener(){
+		DataSelector.show(this, getString(R.string.action_open), new DataSelector.ResultListener(){
 			@Override
 			public void onSelected(String filename) {
 				if(filename!=null){
 					try {
 						game = Game.load(MainActivity.this, filename);
                         update(Game.UPDATE_MODE.CREATE);
-					} catch (ClassNotFoundException e) {
-						Toast.makeText(MainActivity.this, "Corrupted data", Toast.LENGTH_LONG);
-					} catch (IOException e) {
-						Toast.makeText(MainActivity.this, "File IO error", Toast.LENGTH_LONG);
+					} catch (Exception e) {
+                        Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
 					}
 				}
 			}
 		});
 	}
+
+    private static final String PREF_DEFAULT_NUMBER_OF_PLAYER = "default_number_of_player";
+    private static final String PREF_DEFAULT_IS_THREE_POINT_MATCH = "default_is_three_point_match";
+
 	private void createGame() {
 		View view = LayoutInflater.from(this).inflate(R.layout.view_inital, null);
 		final NumberPicker np = (NumberPicker)view.findViewById(R.id.numberPickerPlayer);
 		np.setMaxValue(MAX_PLAYER);
 		np.setMinValue(MIN_PLAYER);
-		np.setValue(8);// TODO it will be in preference
+		np.setValue(PreferenceHelper.getInstance(this).getInt(PREF_DEFAULT_NUMBER_OF_PLAYER, 8));// TODO it will be in preference
 		final CheckBox cb = (CheckBox)view.findViewById(R.id.checkBoxIsThreePointMatch);
+        cb.setChecked(PreferenceHelper.getInstance(this).getBoolean(PREF_DEFAULT_IS_THREE_POINT_MATCH, false));
 		new AlertDialog.Builder(this)
-		.setTitle("Initial")
+		.setTitle(getString(R.string.action_initial))
 		.setView(view)
-		.setNegativeButton("Cancel", null)
-		.setPositiveButton("OK", new OnClickListener(){
+		.setNegativeButton(getString(R.string.label_cancel), null)
+		.setPositiveButton(getString(R.string.label_ok), new OnClickListener(){
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
+                PreferenceHelper.getInstance(MainActivity.this).putInt(PREF_DEFAULT_NUMBER_OF_PLAYER, np.getValue());
+                PreferenceHelper.getInstance(MainActivity.this).putBoolean(PREF_DEFAULT_IS_THREE_POINT_MATCH, cb.isChecked());
 				game = new Game(Player.create(np.getValue()),cb.isChecked());
-                game.make();
+                if(!game.make()) {
+                    Toast.makeText(MainActivity.this,getString(R.string.message_round_create_error),Toast.LENGTH_LONG).show();
+                }
                 update(Game.UPDATE_MODE.CREATE);
-				if(onupdateplayerslistener!=null){
-					onupdateplayerslistener.onUpdatePlayer(game.getPlayers());
-				}
 			}
 		})
 		.show();
@@ -183,9 +202,9 @@ public class MainActivity extends Activity implements ActionBar.TabListener,
 		@Override
 		public CharSequence getPageTitle(int position) {
 			if(position==0){
-				return "Player";
+				return getString(R.string.label_player);
 			}else{
-				return "Round"+position;
+				return getString(R.string.label_round)+position;
 			}
 		}
 	}
@@ -213,7 +232,9 @@ public class MainActivity extends Activity implements ActionBar.TabListener,
 
 	@Override
 	public void update(Game.UPDATE_MODE mode) {
-		this.onupdateplayerslistener.onUpdatePlayer(game.getPlayers());
+	if(onupdateplayerslistener!=null){
+            onupdateplayerslistener.onUpdatePlayer(game.getPlayers());
+        }
         switch(mode){
             case ADD:
                 addTab();

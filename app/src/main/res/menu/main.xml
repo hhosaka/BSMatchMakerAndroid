@@ -3,6 +3,7 @@
     tools:context="com.nag.android.bs_match_maker.MainActivity" >
     <item android:id="@+id/action_initial" android:title="@string/action_initial"/>
     <item android:id="@+id/action_open" android:title="@string/action_open"/>
+    <item android:id="@+id/action_save" android:title="@string/action_save"/>
     <item android:id="@+id/action_delete" android:title="@string/action_delete"/>
     <item android:id="@+id/action_settings" android:title="@string/action_settings" />
 </menu>

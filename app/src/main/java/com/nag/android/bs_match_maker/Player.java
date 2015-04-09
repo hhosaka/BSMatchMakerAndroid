@@ -154,4 +154,12 @@ class Player implements Serializable{
 		}
 		return ret.toArray(new Player[0]);
 	}
+
+    public String[] getLog(){
+        List<String>buf=new ArrayList<String>();
+        for(Match match : matches){
+            buf.add(match.getLogString(this));
+        }
+        return buf.toArray(new String[0]);
+    }
 }
