@@ -194,4 +194,8 @@ public class Game implements Serializable{
 		getLatestRound().bind();
 		save(context,true);
 	}
+
+	public long getStartTime(){
+		return getLatestRound().getStartTime();
+	}
 }

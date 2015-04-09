@@ -7,6 +7,7 @@ public class Round implements Serializable{
 	private static final long serialVersionUID = Game.serialVersionUID;
 	private ArrayList<Match> matches=new ArrayList<Match>();
 	private int round;
+    private long start_time=0;
 
 	public Match[]getMatches(){
 		return matches.toArray(new Match[0]);
@@ -29,6 +30,7 @@ public class Round implements Serializable{
 	public String getTitle() {
 		return "The " + ConvertString(round) + " Round "+getStatusTitle(getStatus());
 	}
+
 	public Round(int round) {
 		this.round = round;
 	}
@@ -77,9 +79,15 @@ public class Round implements Serializable{
 			match.bind();
 		}
 	}
-	public void start() {
+
+	public long start() {
 		for(Match match : matches) {
 			match.start();
 		}
+        return start_time = System.currentTimeMillis();
+    }
+
+	public long getStartTime(){
+		return start_time;
 	}
 }

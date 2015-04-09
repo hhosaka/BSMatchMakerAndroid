@@ -147,10 +147,10 @@ class Player implements Serializable{
 		return String.format("%1$03d", id) +" : " + name + " ("+ getMatchPercentage()+")";
 	}
 
-	public static Player[] create(int count){
+	public static Player[] create(String prefix, int count){
 		List<Player>ret = new ArrayList<Player>();
 		for (int i = 0; i < count; ++i) {
-			ret.add(new Player(i, "Player" + String.format("%1$03d", i)));
+			ret.add(new Player(i, prefix + String.format("%1$03d", i)));
 		}
 		return ret.toArray(new Player[0]);
 	}

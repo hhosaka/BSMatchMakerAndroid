@@ -14,6 +14,9 @@
     <string name="label_shuffle">Shuffle</string>
     <string name="label_player">Player</string>
     <string name="label_round">Round</string>
+    <string name="label_three_point_match">Three point match</string>
+    <string name="label_number_of_player">Number of Player</string>
+    <string name="label_player_prefix">Player</string>
     <string name="message_round_create_error">"Due to convination stagfration, app cannot generate round. you may try again"</string>
 
 

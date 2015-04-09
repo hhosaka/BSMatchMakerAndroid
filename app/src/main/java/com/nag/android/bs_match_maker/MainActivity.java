@@ -45,6 +45,9 @@ public class MainActivity extends Activity implements ActionBar.TabListener,
 
 		if(savedInstanceState!=null){
 			game = (Game)savedInstanceState.getSerializable(ARG_GAME);
+			if(game.getLatestRound().getStatus()== Match.STATUS.PLAYING){
+				((TimerView)findViewById(R.id.TimerTextTimer)).start(game.getStartTime());
+			}
 		}else{
             try {
                 game = Game.load(this);
@@ -64,11 +67,11 @@ public class MainActivity extends Activity implements ActionBar.TabListener,
 			@Override
 			public void onPageSelected(int position) {
 				actionBar.setSelectedNavigationItem(position);
-                if(position ==0 || position!=actionBar.getTabCount()-1){
-                    findViewById(R.id.layoutButtons).setVisibility(View.GONE);
-                }else{
-                    findViewById(R.id.layoutButtons).setVisibility(View.VISIBLE);
-                }
+				if (position == 0 || position != actionBar.getTabCount() - 1) {
+					findViewById(R.id.layoutButtons).setVisibility(View.GONE);
+				} else {
+					findViewById(R.id.layoutButtons).setVisibility(View.VISIBLE);
+				}
 			}
 		});
 
@@ -84,9 +87,9 @@ public class MainActivity extends Activity implements ActionBar.TabListener,
 	private void addTab() {
 		final ActionBar actionBar = getActionBar();
 		actionBar.addTab(
-                actionBar.newTab()
-                        .setText(mSectionsPagerAdapter.getPageTitle(actionBar.getTabCount()))
-                        .setTabListener(this));
+				actionBar.newTab()
+						.setText(mSectionsPagerAdapter.getPageTitle(actionBar.getTabCount()))
+						.setTabListener(this));
         mSectionsPagerAdapter.notifyDataSetChanged();
 	}
 
@@ -139,6 +142,11 @@ public class MainActivity extends Activity implements ActionBar.TabListener,
     private static final String PREF_DEFAULT_NUMBER_OF_PLAYER = "default_number_of_player";
     private static final String PREF_DEFAULT_IS_THREE_POINT_MATCH = "default_is_three_point_match";
 
+	private final String PREF_PLAYER_PREFIX = "player_prefix";
+	
+	private String getPlayerPrefix(){
+		return PreferenceHelper.getInstance(this).getString(PREF_PLAYER_PREFIX,getString(R.string.label_player_prefix));
+	}
 	private void createGame() {
 		View view = LayoutInflater.from(this).inflate(R.layout.view_inital, null);
 		final NumberPicker np = (NumberPicker)view.findViewById(R.id.numberPickerPlayer);
@@ -156,7 +164,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener,
 			public void onClick(DialogInterface dialog, int which) {
                 PreferenceHelper.getInstance(MainActivity.this).putInt(PREF_DEFAULT_NUMBER_OF_PLAYER, np.getValue());
                 PreferenceHelper.getInstance(MainActivity.this).putBoolean(PREF_DEFAULT_IS_THREE_POINT_MATCH, cb.isChecked());
-				game = new Game(Player.create(np.getValue()),cb.isChecked());
+				game = new Game(Player.create(getPlayerPrefix(), np.getValue()),cb.isChecked());
                 if(!game.make()) {
                     Toast.makeText(MainActivity.this,getString(R.string.message_round_create_error),Toast.LENGTH_LONG).show();
                 }
@@ -238,6 +246,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener,
         switch(mode){
             case ADD:
                 addTab();
+				mViewPager.setCurrentItem(mSectionsPagerAdapter.getCount()-1);
                 break;
             case CREATE:
                 final ActionBar actionBar = getActionBar();

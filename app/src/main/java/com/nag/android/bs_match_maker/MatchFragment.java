@@ -66,9 +66,8 @@ public class MatchFragment extends Fragment implements OnItemClickListener, Resu
 		buttonStart.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View arg0) {
-				getGame().getLatestRound().start();//TODO
+				timerview.start(getGame().getLatestRound().start());//TODO
 				setUIByStatus();
-				timerview.start();
 			}
 		});
 		buttonShuffle = (Button)getActivity().findViewById(R.id.buttonShuffle);
@@ -134,7 +133,12 @@ public class MatchFragment extends Fragment implements OnItemClickListener, Resu
             public void onSelected() {
                 adapter.getAdapter().getView(position, view, listview);
                 if(getGame().getLatestRound().getStatus()==STATUS.DONE){
-                    if(!getGame().make()) {
+					try {
+						getGame().save(getActivity(),true);
+					} catch (IOException e) {
+						Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
+					}
+					if(!getGame().make()) {
                         Toast.makeText(getActivity(), getString(R.string.message_round_create_error), Toast.LENGTH_LONG).show();
                     }
                     timerview.stop();
