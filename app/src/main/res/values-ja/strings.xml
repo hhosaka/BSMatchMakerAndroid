@@ -2,7 +2,7 @@
 <resources>
 
     <string name="app_name">BSマッチメーカー Android</string>
-    <string name="action_settings">設定</string>
+    <string name="action_help">ヘルプ</string>
     <string name="action_initial">新規</string>
     <string name="action_open">開く</string>
     <string name="action_save">保存</string>
@@ -16,7 +16,8 @@
     <string name="label_round">ラウンド</string>
     <string name="label_three_point_match">二本先取</string>
     <string name="label_number_of_player">プレイヤー数</string>
-    <string name="label_player_prefix">"プレイヤー "</string>
+    <string name="label_player_prefix">"既定のプレイヤー名"</string>
+    <string name="label_player_prefix_default">"プレイヤー"</string>
     <string name="message_round_create_error">組み合わせを作れませんでした。再抽選できる可能性はあります。</string>
 
 

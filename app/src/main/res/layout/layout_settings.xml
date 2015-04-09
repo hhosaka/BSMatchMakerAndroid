@@ -3,14 +3,14 @@
     android:layout_width="match_parent" android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <EditText
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/editTextName"
-        android:maxLines="1" />
+        android:text="@string/label_player_prefix"
+        android:id="@+id/labelPlayerPrefix" />
 
-    <ListView
-        android:layout_width="wrap_content"
+    <EditText
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/listViewLog" />
+        android:id="@+id/editTextPlayerPrefix" />
 </LinearLayout>

@@ -10,6 +10,8 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
+import android.content.Intent;
+import android.net.Uri;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
@@ -18,7 +20,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.NumberPicker;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.nag.android.util.PreferenceHelper;
@@ -101,7 +105,8 @@ public class MainActivity extends Activity implements ActionBar.TabListener,
 
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()){
-		case R.id.action_settings:
+		case R.id.action_help:
+			startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(getResources().getString(R.string.url_help))));
 			break;
 		case R.id.action_initial:
 			createGame();
@@ -143,10 +148,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener,
     private static final String PREF_DEFAULT_IS_THREE_POINT_MATCH = "default_is_three_point_match";
 
 	private final String PREF_PLAYER_PREFIX = "player_prefix";
-	
-	private String getPlayerPrefix(){
-		return PreferenceHelper.getInstance(this).getString(PREF_PLAYER_PREFIX,getString(R.string.label_player_prefix));
-	}
+
 	private void createGame() {
 		View view = LayoutInflater.from(this).inflate(R.layout.view_inital, null);
 		final NumberPicker np = (NumberPicker)view.findViewById(R.id.numberPickerPlayer);
@@ -155,6 +157,8 @@ public class MainActivity extends Activity implements ActionBar.TabListener,
 		np.setValue(PreferenceHelper.getInstance(this).getInt(PREF_DEFAULT_NUMBER_OF_PLAYER, 8));// TODO it will be in preference
 		final CheckBox cb = (CheckBox)view.findViewById(R.id.checkBoxIsThreePointMatch);
         cb.setChecked(PreferenceHelper.getInstance(this).getBoolean(PREF_DEFAULT_IS_THREE_POINT_MATCH, false));
+		final TextView prefix = (EditText)view.findViewById(R.id.editTextPlayerPrefix);
+		prefix.setText(PreferenceHelper.getInstance(this).getString(PREF_PLAYER_PREFIX,getString(R.string.label_player_prefix_default)));
 		new AlertDialog.Builder(this)
 		.setTitle(getString(R.string.action_initial))
 		.setView(view)
@@ -164,7 +168,8 @@ public class MainActivity extends Activity implements ActionBar.TabListener,
 			public void onClick(DialogInterface dialog, int which) {
                 PreferenceHelper.getInstance(MainActivity.this).putInt(PREF_DEFAULT_NUMBER_OF_PLAYER, np.getValue());
                 PreferenceHelper.getInstance(MainActivity.this).putBoolean(PREF_DEFAULT_IS_THREE_POINT_MATCH, cb.isChecked());
-				game = new Game(Player.create(getPlayerPrefix(), np.getValue()),cb.isChecked());
+				PreferenceHelper.getInstance(MainActivity.this).putString(PREF_PLAYER_PREFIX, prefix.getText().toString());
+				game = new Game(Player.create(prefix.getText().toString(), np.getValue()),cb.isChecked());
                 if(!game.make()) {
                     Toast.makeText(MainActivity.this,getString(R.string.message_round_create_error),Toast.LENGTH_LONG).show();
                 }
