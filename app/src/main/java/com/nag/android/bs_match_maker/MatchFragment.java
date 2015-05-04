@@ -5,6 +5,8 @@ import com.nag.android.bs_match_maker.Match.STATUS;
 import android.app.Fragment;
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -148,14 +150,6 @@ public class MatchFragment extends Fragment implements OnItemClickListener, Resu
                 }
             }
         });
-
-//		final ResultSelector resultselector = new ResultSelector(getActivity(), match, false);
-//		new AlertDialog.Builder(getActivity())
-//			.setIcon(android.R.drawable.ic_dialog_info)
-//			.setTitle(match.toString())
-//			.setView(resultselector)
-//			.setNegativeButton("Cancel", null)
-//			.show();
 	}
 
     @Override
@@ -177,9 +171,10 @@ public class MatchFragment extends Fragment implements OnItemClickListener, Resu
 			}
 			if(getItem(position).getStatus()==STATUS.DONE){
 				convertView.setBackgroundColor(Color.GREEN);
+			}else{
+				convertView.setBackgroundColor(Color.LTGRAY);
 			}
 			return super.getView(position, convertView, parent);
 		}
-
 	}
 }

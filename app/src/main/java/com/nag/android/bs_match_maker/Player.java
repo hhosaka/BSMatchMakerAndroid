@@ -12,12 +12,15 @@ class Player implements Serializable{
 	private List<Match> matches = new ArrayList<Match>();
 	public boolean Dropped;
 	public int id;
-	public int rank;
+	private int rank;
 
+	public int getId(){return id;}
 	public String getName(){
 		return name;
 	}
-	
+
+	public int getRank(){return rank;}
+
 	public void setName(String name){
 		this.name = name;
 	}
@@ -126,25 +129,21 @@ class Player implements Serializable{
 		}
 	}
 
-//	public static Player[] OrderByRank(Player[] players) {
-//		int rank = 0;
-//		int i = 0;
-//		Player prev = null;
-//
-//		Arrays.sort(players, new ComparisonWithId());
-//		for (Player player : players) {
-//			++i;
-//			if (prev == null || comparison(prev, player) != 0) {
-//				rank = i;
-//			}
-//			player.rank = rank;
-//			prev = player;
-//		}
-//		return players;
-//	}
+	public static Player[] updateRank(Player[] players) {
+		int rank = 0;
+		int i = 0;
+		Player prev = null;
 
-	public String toString(){
-		return String.format("%1$03d", id) +" : " + name + " ("+ getMatchPercentage()+")";
+		Arrays.sort(players, new ComparisonWithId());
+		for (Player player : players) {
+			++i;
+			if (prev == null || comparison(prev, player) != 0) {
+				rank = i;
+			}
+			player.rank = rank;
+			prev = player;
+		}
+		return players;
 	}
 
 	public static Player[] create(String prefix, int count){

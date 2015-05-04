@@ -57,8 +57,6 @@ public class PlayerFragment extends Fragment implements OnUpdatePlayersListener,
         if(listview!=null) {// TODO
             listview.setAdapter(adapter);
         }
-		//adapter.sort(new Player.ComparisonWithId());
-		//adapter.notifyDataSetChanged();
 	}
 
 	private class InternalAdapter extends ArrayAdapter<Player>{
@@ -66,19 +64,40 @@ public class PlayerFragment extends Fragment implements OnUpdatePlayersListener,
 		private LayoutInflater inflater = null;
 
 		public InternalAdapter(Context context,Player[]players) {
-			super(context, android.R.layout.simple_list_item_1,players);
+			super(context, 0,players);
 			this.inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             sort(new Player.ComparisonWithId());
 		}
+		@Override
+		public View getView(int position, View convertView, ViewGroup parent) {
+			if(convertView==null){
+				convertView = inflater.inflate(android.R.layout.simple_list_item_1, null);
+			}
+			((TextView)convertView.findViewById(android.R.id.text1)).setText(getTitle(getItem(position), parent.getWidth()));
+//			((TextView)convertView.findViewById(android.R.id.text1)).setText("temp");
+			return convertView;
+		}
 
-//		@Override
-//		public View getView(int position, View convertView, ViewGroup parent) {
-//			if(convertView==null){
-//				 convertView = inflater.inflate(R.layout.view_player_item, parent, false);
-//			}
-//			((TextView)convertView.findViewById(R.id.textViewName)).setText(getItem(position).getName());
-//			return convertView;
-//		}
+		public String getTitle(Player player,int width){
+			final int LIMIT_WIDTH = 500;
+			StringBuffer sb=new StringBuffer();
+			sb.append(String.format("%1$3d", player.getRank()));
+			sb.append(")");
+			sb.append(String.format("%1$03d", player.getId()));
+			sb.append(" : ");
+			sb.append(player.getName());
+			if(width > LIMIT_WIDTH) {
+				sb.append("P(");
+				sb.append(player.getMatchPercentage());
+				sb.append(") OP(");
+				sb.append(player.getOpponentPercentage());
+				sb.append(") WP(");
+				sb.append(player.getWinPoint());
+				sb.append(")");
+			}
+			return sb.toString();
+		}
+
 	}
 
 	@Override

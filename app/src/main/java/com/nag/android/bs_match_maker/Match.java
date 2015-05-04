@@ -8,13 +8,13 @@ class Match implements Serializable{
 	private static final int PLAYER2 = 1;
     private static final int PLAYER_ID_BYE = -1;
 	private static final Player BYE = new Player(PLAYER_ID_BYE, "BYE");
-	private int id;
+	private final int id;
 	private STATUS status;
     private transient Player[] players;
-    private int playerid[];
+    private final int playerid[];
     private Result result = new Result();
 
-	public enum STATUS { UNDEF, MATCHING, READY, PLAYING, DONE };
+	public enum STATUS { UNDEF, MATCHING, READY, PLAYING, DONE }
 
 	public Player[] getPlayers(){
 		return players;
@@ -27,7 +27,7 @@ class Match implements Serializable{
     public Result getResult(){
         return result;
     }
-	public void Update(Result result) {
+	public void update(Result result) {
         this.result = result;
 		status = STATUS.DONE;
 	}
@@ -94,10 +94,10 @@ class Match implements Serializable{
     }
 
     public String getLogString(Player player){
-        return getResultMark(player) + ":"+getOpponent(player).getName();
+        return getResultMark(player) + "-"+getOpponent(player).getName();
     }
 
-	private int GetOpponentPoint(Player player) {
+	private int getOpponentPoint(Player player) {
 		return this.result.getPoint(OpponentIndex(player));
 	}
 
@@ -131,11 +131,11 @@ class Match implements Serializable{
 	}
 
 	public int getMatchPoint(Player player){
-		return GetMatchPoint(GetMyPoint(player), GetOpponentPoint(player));
+		return GetMatchPoint(GetMyPoint(player), getOpponentPoint(player));
 	}
 
 	public int getWinPoint(Player player) {
-		return GetMyPoint(player) - GetOpponentPoint(player);
+		return GetMyPoint(player) - getOpponentPoint(player);
 	}
 
 	public float getOpponentMatchPoint(Player player){

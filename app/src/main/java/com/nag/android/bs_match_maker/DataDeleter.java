@@ -1,12 +1,9 @@
 package com.nag.android.bs_match_maker;
 
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
-import android.view.View;
-import android.widget.Button;
 
 public class DataDeleter {
 	public static void show(final Context context, String title){

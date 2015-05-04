@@ -90,4 +90,10 @@ public class Round implements Serializable{
 	public long getStartTime(){
 		return start_time;
 	}
+
+	public void restore(Player[]players){
+		for(Match match : matches){
+			match.restore(players);
+		}
+	}
 }

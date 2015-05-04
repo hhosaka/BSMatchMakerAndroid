@@ -3,10 +3,8 @@ package com.nag.android.bs_match_maker;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
-import com.nag.android.util.AbstractCharSequence;
 import com.nag.android.util.LabeledItem;
 
 public class ResultSelector extends RadioGroup {
@@ -70,7 +68,7 @@ public class ResultSelector extends RadioGroup {
                 @Override
                 public void onClick(DialogInterface dialog, int whichButton) {
                     if (whichButton >= 0) {
-                        match.Update(items[whichButton].getValue());
+                        match.update(items[whichButton].getValue());
                         listener.onSelected();
                         dialog.dismiss();
                     }
