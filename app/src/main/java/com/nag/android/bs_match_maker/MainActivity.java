@@ -256,4 +256,17 @@ public class MainActivity extends Activity implements ActionBar.TabListener,
 				// Do Nothing
         }
 	}
+
+	Game.OnUpdateMatchListener onupdatematchlistener = null;
+	@Override
+	public void updateMatch() {
+		if(onupdatematchlistener != null) {
+			onupdatematchlistener.updateMatch();
+		}
+	}
+
+	@Override
+	public void setOnUpdateMatchListener(Game.OnUpdateMatchListener listener) {
+		this.onupdatematchlistener = listener;
+	}
 }

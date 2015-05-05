@@ -10,7 +10,7 @@ class Player implements Serializable{
 	private static final long serialVersionUID = Game.serialVersionUID;
 	private String name;
 	private List<Match> matches = new ArrayList<Match>();
-	public boolean Dropped;
+	private boolean dropped = false;
 	public int id;
 	private int rank;
 
@@ -20,6 +20,8 @@ class Player implements Serializable{
 	}
 
 	public int getRank(){return rank;}
+	public void setDropped(boolean dropped){this.dropped = dropped;}
+	public boolean getDropped(){return dropped;}
 
 	public void setName(String name){
 		this.name = name;
@@ -34,7 +36,7 @@ class Player implements Serializable{
 
 	public int getMatchPoint() {
 		int ret = 0;
-		for(Match match : matches) {
+		for (Match match : matches) {
 			ret += match.getMatchPoint(this);
 		}
 		return ret;

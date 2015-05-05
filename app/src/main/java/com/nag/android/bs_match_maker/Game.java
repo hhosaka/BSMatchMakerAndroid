@@ -27,9 +27,14 @@ public class Game implements Serializable{
     private final Stack<Round> rounds = new Stack<Round>();
 
     enum UPDATE_MODE{DATA,ADD,CREATE}
+	interface OnUpdateMatchListener{
+		void updateMatch();
+	}
 	interface GameHolder{
 		Game getGame();
 		void update(UPDATE_MODE mode);
+		void updateMatch();
+		void setOnUpdateMatchListener(OnUpdateMatchListener listener);
 	}
 
 	public int getCount(){
@@ -39,6 +44,7 @@ public class Game implements Serializable{
 	public Round getRound(int round){
 		return rounds.get(round);
 	}
+	public Match.STATUS getStatus(){return getLatestRound().getStatus();}
 
 	public void save(Context context,boolean isTemporary) throws IOException{
         if(rounds.size()>0) {
@@ -140,7 +146,7 @@ public class Game implements Serializable{
 		Arrays.sort(temp, new Player.Comparison());
 		Stack<Player> stack = new Stack<Player>();
 		for (Player player : temp) {
-			if (!player.Dropped) {
+			if (!player.getDropped()) {
 				if (stack.size() == 0) {
 					stack.push(player);
 				} else {

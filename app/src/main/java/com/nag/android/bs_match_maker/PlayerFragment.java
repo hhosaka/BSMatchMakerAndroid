@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -47,8 +48,11 @@ public class PlayerFragment extends Fragment implements OnUpdatePlayersListener,
 		((PlayersObserver)getActivity()).setOnUpdatePlayersListener(this);
 	}
 
+	private Game getGame(){
+		return ((Game.GameHolder)getActivity()).getGame();
+	}
 	public Player[]getPlayers(){
-		return ((Game.GameHolder)getActivity()).getGame().getPlayers();
+		return getGame().getPlayers();
 	}
 
 	@Override
@@ -97,7 +101,6 @@ public class PlayerFragment extends Fragment implements OnUpdatePlayersListener,
 			}
 			return sb.toString();
 		}
-
 	}
 
 	@Override
@@ -106,8 +109,11 @@ public class PlayerFragment extends Fragment implements OnUpdatePlayersListener,
 
         View layout = getActivity().getLayoutInflater().inflate(R.layout.layout_player_information, null);
 		final EditText editView = (EditText)layout.findViewById(R.id.editTextName);
-        ((ListView)layout.findViewById(R.id.listViewLog)).setAdapter(new ArrayAdapter<String>(view.getContext(),android.R.layout.simple_list_item_1,player.getLog()));
+		final CheckBox cb = (CheckBox)layout.findViewById(R.id.checkBoxDropped);
+		cb.setEnabled(getGame().getStatus() == Match.STATUS.MATCHING);
+		((ListView) layout.findViewById(R.id.listViewLog)).setAdapter(new ArrayAdapter<String>(view.getContext(), android.R.layout.simple_list_item_1, player.getLog()));
 		editView.setText(player.getName());
+		cb.setChecked(player.getDropped());
 		new AlertDialog.Builder(getActivity())
 			.setIcon(android.R.drawable.ic_dialog_info)
 			.setTitle(getString(R.string.label_player))
@@ -115,9 +121,12 @@ public class PlayerFragment extends Fragment implements OnUpdatePlayersListener,
 			.setPositiveButton(getString(R.string.label_ok), new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int whichButton) {
 					player.setName(editView.getText().toString());
-                    listview.getAdapter().getView(position, view, listview);
-
-                }
+					player.setDropped(cb.isChecked());
+					if(cb.isChecked()){
+						((Game.GameHolder)getActivity()).updateMatch();
+					}
+					listview.getAdapter().getView(position, view, listview);
+				}
 			})
 			.setNegativeButton(getString(R.string.label_cancel), null)
 			.show();

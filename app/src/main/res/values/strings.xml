@@ -19,6 +19,7 @@
     <string name="label_player_prefix">Player Prefix</string>
     <string name="label_player_prefix_default">Player</string>
     <string name="message_round_create_error">"Due to convination stagfration, app cannot generate round. you may try again"</string>
-    <string name="url_help">"https://github.com/hhosaka/BSMatchMakerAndroid/wiki"</string>
+    <string name="url_help">"https://sites.google.com/site/hhosaka183/"</string>
+    <string name="label_dropped">Dropped</string>
 
 </resources>

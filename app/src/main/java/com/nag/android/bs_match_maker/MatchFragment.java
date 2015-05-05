@@ -21,7 +21,7 @@ import android.widget.Toast;
 
 import java.io.IOException;
 
-public class MatchFragment extends Fragment implements OnItemClickListener, ResultSelector.OnResultListener{
+public class MatchFragment extends Fragment implements OnItemClickListener, ResultSelector.OnResultListener,Game.OnUpdateMatchListener{
 	private static final String ARG_ROUND = "round";
 	private int round;// TODO
 	private ListView listview = null;
@@ -87,7 +87,20 @@ public class MatchFragment extends Fragment implements OnItemClickListener, Resu
 		listview.setAdapter(new InternalAdapter(getActivity(), getRound().getMatches()));
 		listview.setOnItemClickListener(this);
 		setUIByStatus();
+		if(getGame().getRound(round).getStatus()==STATUS.MATCHING) {
+			((Game.GameHolder)getActivity()).setOnUpdateMatchListener(this);
+		}
 		return rootView;
+	}
+
+	@Override
+	public void updateMatch() {
+		if(getGame().getRound(round).getStatus()==STATUS.MATCHING) {
+			if (!getGame().make()) {
+				Toast.makeText(getActivity(), getString(R.string.message_round_create_error), Toast.LENGTH_LONG).show();
+			}
+			listview.setAdapter(new InternalAdapter(getActivity(), getRound().getMatches()));
+		}
 	}
 
 	private void setUIByStatus(){
@@ -131,33 +144,33 @@ public class MatchFragment extends Fragment implements OnItemClickListener, Resu
 	public void onItemClick(final AdapterView<?> adapter, final View view,final int position, long id) {
 		final Match match = (Match)adapter.getItemAtPosition(position);
         new ResultSelector(view.getContext(), getGame(),match).show(new ResultSelector.OnResultListener() {
-            @Override
-            public void onSelected() {
-                adapter.getAdapter().getView(position, view, listview);
-                if(getGame().getLatestRound().getStatus()==STATUS.DONE){
+			@Override
+			public void onSelected() {
+				adapter.getAdapter().getView(position, view, listview);
+				if (getGame().getLatestRound().getStatus() == STATUS.DONE) {
 					try {
-						getGame().save(getActivity(),true);
+						getGame().save(getActivity(), true);
 					} catch (IOException e) {
 						Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
 					}
-					if(!getGame().make()) {
-                        Toast.makeText(getActivity(), getString(R.string.message_round_create_error), Toast.LENGTH_LONG).show();
-                    }
-                    timerview.stop();
-                    ((Game.GameHolder)getActivity()).update(Game.UPDATE_MODE.ADD);
-                }else{
-                    ((Game.GameHolder)getActivity()).update(Game.UPDATE_MODE.DATA);
-                }
-            }
-        });
+					if (!getGame().make()) {
+						Toast.makeText(getActivity(), getString(R.string.message_round_create_error), Toast.LENGTH_LONG).show();
+					}
+					timerview.stop();
+					((Game.GameHolder) getActivity()).update(Game.UPDATE_MODE.ADD);
+				} else {
+					((Game.GameHolder) getActivity()).update(Game.UPDATE_MODE.DATA);
+				}
+			}
+		});
 	}
 
-    @Override
+	@Override
     public void onSelected() {
 
     }
 
-    private class InternalAdapter extends ArrayAdapter<Match>{
+	private class InternalAdapter extends ArrayAdapter<Match>{
 
 		private LayoutInflater inflater;
 		public InternalAdapter(Context context, Match[] matches) {
