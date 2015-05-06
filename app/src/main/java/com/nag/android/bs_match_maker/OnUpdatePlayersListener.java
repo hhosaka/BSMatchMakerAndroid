@@ -1,5 +1,5 @@
 package com.nag.android.bs_match_maker;
 
-public interface OnUpdatePlayersListener {
+interface OnUpdatePlayersListener {
 	void onUpdatePlayer(Player[]player);
 }

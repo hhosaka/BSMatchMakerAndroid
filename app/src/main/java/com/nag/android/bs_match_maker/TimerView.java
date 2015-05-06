@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 public class TimerView extends TextView {
 
-	Handler handler=new Handler();
+	private final Handler handler=new Handler();
 	public TimerView(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
 	}
@@ -21,13 +21,12 @@ public class TimerView extends TextView {
 	}
 
 	private Timer timer = null;
-	private long initial;
+//	private long initial;
     public void start(){
         start(System.currentTimeMillis());
     }
 
-	public void start(long tp){
-		initial = tp;
+	public void start(final long initial){
 		timer = new Timer(true);
 		timer.scheduleAtFixedRate(new TimerTask(){
 			@Override

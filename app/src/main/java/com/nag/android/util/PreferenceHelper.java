@@ -41,36 +41,36 @@ public class PreferenceHelper {
 	public void putBoolean(String key, boolean value){
 		SharedPreferences.Editor edit=pref.edit();
 		edit.putBoolean(key, value);
-		edit.commit();
+		edit.apply();
 	}
 
 	public void putInt(String key, int value){
 		SharedPreferences.Editor edit=pref.edit();
 		edit.putInt(key, value);
-		edit.commit();
+		edit.apply();
 	}
 
 	public void putLong(String key, long value){
 		SharedPreferences.Editor edit=pref.edit();
 		edit.putLong(key, value);
-		edit.commit();
+		edit.apply();
 	}
 
 	public void putString(String key, String value){
 		SharedPreferences.Editor edit=pref.edit();
 		edit.putString(key, value);
-		edit.commit();
+		edit.apply();
 	}
 	
 	public void putDouble(String key, double value){
 		SharedPreferences.Editor edit=pref.edit();
 		edit.putString(key, String.valueOf(value));
-		edit.commit();
+		edit.apply();
 	}
 	
 	public void remove(String key){
 		SharedPreferences.Editor edit=pref.edit();
 		edit.remove(key);
-		edit.commit();
+		edit.apply();
 	}
 }

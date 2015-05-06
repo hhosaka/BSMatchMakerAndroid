@@ -5,8 +5,6 @@ import com.nag.android.bs_match_maker.Match.STATUS;
 import android.app.Fragment;
 import android.content.Context;
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,9 +19,10 @@ import android.widget.Toast;
 
 import java.io.IOException;
 
-public class MatchFragment extends Fragment implements OnItemClickListener, ResultSelector.OnResultListener,Game.OnUpdateMatchListener{
+public class MatchFragment extends Fragment implements OnItemClickListener, ResultSelector.OnResultListener,GameHolder.OnUpdateMatchListener{
 	private static final String ARG_ROUND = "round";
-	private int round;// TODO
+//	private int round;// TODO
+	private Round round;
 	private ListView listview = null;
 	private Button buttonFix = null;
 	private Button buttonStart = null;
@@ -42,13 +41,13 @@ public class MatchFragment extends Fragment implements OnItemClickListener, Resu
 	}
 
 	private Game getGame(){
-		return ((Game.GameHolder)getActivity()).getGame();
+		return ((GameHolder)getActivity()).getGame();
 	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		round = getArguments().getInt(ARG_ROUND);
+		round = getGame().getRounds().get(getArguments().getInt(ARG_ROUND));
 		View rootView = inflater.inflate(R.layout.fragment_match, container, false);
 		timerview = (TimerView)getActivity().findViewById(R.id.TimerTextTimer);
 
@@ -59,7 +58,7 @@ public class MatchFragment extends Fragment implements OnItemClickListener, Resu
                 try {
                     getGame().bind(getActivity());//TODO
                 }catch(IOException e){
-                    Toast.makeText(getActivity(),e.toString(),Toast.LENGTH_LONG);
+                    Toast.makeText(getActivity(),e.toString(),Toast.LENGTH_LONG).show();
                 }
 				setUIByStatus();
 			}
@@ -79,33 +78,33 @@ public class MatchFragment extends Fragment implements OnItemClickListener, Resu
 				if(!getGame().make()){
                     Toast.makeText(getActivity(),getString(R.string.message_round_create_error),Toast.LENGTH_LONG).show();
                 }
-				listview.setAdapter(new InternalAdapter(getActivity(), getRound().getMatches()));
+				listview.setAdapter(new InternalAdapter(getActivity(), round.getMatches()));
 			}
 		});
 		listview = (ListView)rootView.findViewById(R.id.listViewPlayer);
 
-		listview.setAdapter(new InternalAdapter(getActivity(), getRound().getMatches()));
+		listview.setAdapter(new InternalAdapter(getActivity(), round.getMatches()));
 		listview.setOnItemClickListener(this);
 		setUIByStatus();
-		if(getGame().getRound(round).getStatus()==STATUS.MATCHING) {
-			((Game.GameHolder)getActivity()).setOnUpdateMatchListener(this);
+		if(round.getStatus()==STATUS.MATCHING) {
+			((GameHolder)getActivity()).setOnUpdateMatchListener(this);
 		}
 		return rootView;
 	}
 
 	@Override
 	public void updateMatch() {
-		if(getGame().getRound(round).getStatus()==STATUS.MATCHING) {
+		if(round.getStatus()==STATUS.MATCHING) {
 			if (!getGame().make()) {
 				Toast.makeText(getActivity(), getString(R.string.message_round_create_error), Toast.LENGTH_LONG).show();
 			}
-			listview.setAdapter(new InternalAdapter(getActivity(), getRound().getMatches()));
+			listview.setAdapter(new InternalAdapter(getActivity(), round.getMatches()));
 		}
 	}
 
 	private void setUIByStatus(){
 		switch(getGame().getLatestRound().getStatus()){
-        case UNDEF:
+        case UNDEFINED:
 		case MATCHING:
 			timerview.setVisibility(View.GONE);
 			buttonFix.setEnabled(true);
@@ -114,7 +113,7 @@ public class MatchFragment extends Fragment implements OnItemClickListener, Resu
             buttonStart.setVisibility(View.VISIBLE);
             buttonShuffle.setEnabled(true);
 			buttonShuffle.setVisibility(View.VISIBLE);
-			listview.setEnabled(false);
+//			listview.setEnabled(false);
 			break;
 		case READY:
 			timerview.setVisibility(View.GONE);
@@ -124,7 +123,7 @@ public class MatchFragment extends Fragment implements OnItemClickListener, Resu
             buttonStart.setEnabled(true);
             buttonShuffle.setVisibility(View.VISIBLE);
 			buttonShuffle.setEnabled(false);
-			listview.setEnabled(false);
+//			listview.setEnabled(false);
 			break;
 		case PLAYING:
 		case DONE:
@@ -132,37 +131,39 @@ public class MatchFragment extends Fragment implements OnItemClickListener, Resu
             buttonFix.setVisibility(View.GONE);
             buttonStart.setVisibility(View.GONE);
             buttonShuffle.setVisibility(View.GONE);
-			listview.setEnabled(true);
+//			listview.setEnabled(true);
 			break;
 		}
 	}
-	public Round getRound(){
-		return getGame().getRound(round);
-	}
 
+	private GameHolder getGameHolder(){return (GameHolder)getActivity();}
 	@Override
 	public void onItemClick(final AdapterView<?> adapter, final View view,final int position, long id) {
-		final Match match = (Match)adapter.getItemAtPosition(position);
-        new ResultSelector(view.getContext(), getGame(),match).show(new ResultSelector.OnResultListener() {
-			@Override
-			public void onSelected() {
-				adapter.getAdapter().getView(position, view, listview);
-				if (getGame().getLatestRound().getStatus() == STATUS.DONE) {
-					try {
-						getGame().save(getActivity(), true);
-					} catch (IOException e) {
-						Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
+		if(round.getStatus()==STATUS.PLAYING) {
+			final Match match = (Match) adapter.getItemAtPosition(position);
+			new ResultSelector(view.getContext(), getGame(), match).show(new ResultSelector.OnResultListener() {
+				@Override
+				public void onSelected() {
+					adapter.getAdapter().getView(position, view, listview);
+					Game game = getGame();
+					Context context = getActivity();
+					if (game.getStatus() == STATUS.DONE) {
+						timerview.stop();
+						try {
+							game.save(context, null);
+						} catch (IOException e) {
+							Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
+						}
+						if (!game.make()) {
+							Toast.makeText(context, getString(R.string.message_round_create_error), Toast.LENGTH_LONG).show();
+						}
+						getGameHolder().update(GameHolder.UPDATE_MODE.ADD);
+					} else {
+						getGameHolder().update(GameHolder.UPDATE_MODE.DATA);
 					}
-					if (!getGame().make()) {
-						Toast.makeText(getActivity(), getString(R.string.message_round_create_error), Toast.LENGTH_LONG).show();
-					}
-					timerview.stop();
-					((Game.GameHolder) getActivity()).update(Game.UPDATE_MODE.ADD);
-				} else {
-					((Game.GameHolder) getActivity()).update(Game.UPDATE_MODE.DATA);
 				}
-			}
-		});
+			});
+		}
 	}
 
 	@Override
@@ -172,7 +173,7 @@ public class MatchFragment extends Fragment implements OnItemClickListener, Resu
 
 	private class InternalAdapter extends ArrayAdapter<Match>{
 
-		private LayoutInflater inflater;
+		private final LayoutInflater inflater;
 		public InternalAdapter(Context context, Match[] matches) {
 			super(context, android.R.layout.simple_list_item_1, matches);
 			inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);

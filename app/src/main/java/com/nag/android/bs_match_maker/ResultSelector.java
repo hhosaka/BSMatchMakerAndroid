@@ -18,8 +18,8 @@ public class ResultSelector extends RadioGroup {
         }
     }
 
-    private Game game;
-	private Match match;
+    private final Game game;
+	private final Match match;
 
 	public ResultSelector(Context context, Game game, Match match) {
 		super(context);

@@ -9,6 +9,8 @@
     <string name="action_delete">削除</string>
     <string name="label_ok">OK</string>
     <string name="label_cancel">キャンセル</string>
+    <string name="label_delete_all">全削除</string>
+    <string name="label_delete">削除</string>
     <string name="label_fix">決定</string>
     <string name="label_start">開始</string>
     <string name="label_shuffle">抽選</string>

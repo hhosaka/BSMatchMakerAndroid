@@ -1,8 +1,10 @@
 package com.nag.android.util;
 
+import android.support.annotation.NonNull;
+
 public class LabeledItem<T> implements CharSequence{
-	private String label;
-	private T value;
+	private final String label;
+	private final T value;
 
 	public LabeledItem(String label, T value){
 		this.label = label;
@@ -14,6 +16,7 @@ public class LabeledItem<T> implements CharSequence{
 	}
 
 	@Override
+	@NonNull
 	public String toString(){
 		return label;
 	}

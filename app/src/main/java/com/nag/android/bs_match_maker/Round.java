@@ -5,15 +5,15 @@ import java.util.ArrayList;
 
 public class Round implements Serializable{
 	private static final long serialVersionUID = Game.serialVersionUID;
-	private ArrayList<Match> matches=new ArrayList<Match>();
-	private int round;
+	private final ArrayList<Match> matches=new ArrayList<Match>();
+	private final int round;
     private long start_time=0;
 
 	public Match[]getMatches(){
-		return matches.toArray(new Match[0]);
+		return matches.toArray(new Match[matches.size()]);
 	}
 
-	public static String ConvertString(int num) {
+	static String ConvertString(int num) {
 		switch (num) {
 			case 1:
 				return "first";
@@ -37,7 +37,7 @@ public class Round implements Serializable{
 
 	private static String getStatusTitle(Match.STATUS status ) {
 		switch (status) {
-		case UNDEF:
+		case UNDEFINED:
 			return "Undefined";
 		case MATCHING:
 			return "Matching";
@@ -54,7 +54,7 @@ public class Round implements Serializable{
 
 	public Match.STATUS getStatus() {
 		if (matches.size() == 0) {
-			return Match.STATUS.UNDEF;
+			return Match.STATUS.UNDEFINED;
 		} else {
 			for(Match match : matches) {
 				switch (match.getStatus()) {
@@ -70,8 +70,8 @@ public class Round implements Serializable{
 		}
 	}
 
-	public boolean add(Match match){
-		return matches.add(match);
+	public void add(Match match){
+		matches.add(match);
 	}
 
 	public void bind() {

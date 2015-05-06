@@ -11,10 +11,10 @@ class Match implements Serializable{
 	private final int id;
 	private STATUS status;
     private transient Player[] players;
-    private final int playerid[];
+    private final int playerId[];
     private Result result = new Result();
 
-	public enum STATUS { UNDEF, MATCHING, READY, PLAYING, DONE }
+	public enum STATUS {UNDEFINED, MATCHING, READY, PLAYING, DONE }
 
 	public Player[] getPlayers(){
 		return players;
@@ -39,11 +39,11 @@ class Match implements Serializable{
 	Match(int id, Player player1, Player player2) {
 		this.id = id;
         players = new Player[2];
-        playerid = new int[2];
+        playerId = new int[2];
         this.players[PLAYER1] = player1;
-        this.playerid[PLAYER1]=player1.id;
+        this.playerId[PLAYER1]=player1.id;
 		this.players[PLAYER2] = player2;
-        this.playerid[PLAYER2]=player2.id;
+        this.playerId[PLAYER2]=player2.id;
 		status = STATUS.MATCHING;
 	}
 
@@ -75,9 +75,9 @@ class Match implements Serializable{
 		return this.result.getPoint(MyIndex(player));
 	}
 
-	public int GetOpponentMatchPoint(Player player) {
-		return this.players[OpponentIndex(player)].getMatchPoint();
-	}
+//	public int GetOpponentMatchPoint(Player player) {
+//		return this.players[OpponentIndex(player)].getMatchPoint();
+//	}
 
     private Player getOpponent(Player player){return players[OpponentIndex(player)];}
 
@@ -158,7 +158,7 @@ class Match implements Serializable{
     public void restore(Player[]players){
         this.players=new Player[2];
         for(int i=0; i<2; ++i){
-            this.players[i] = getStoredPlayer(playerid[i], players);
+            this.players[i] = getStoredPlayer(playerId[i], players);
         }
     }
 }

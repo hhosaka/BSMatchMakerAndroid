@@ -1,6 +1,9 @@
 package com.nag.android.bs_match_maker;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 import android.app.ActionBar;
 import android.app.Activity;
@@ -28,17 +31,17 @@ import android.widget.Toast;
 import com.nag.android.util.PreferenceHelper;
 
 public class MainActivity extends Activity implements ActionBar.TabListener,
-														Game.GameHolder,
+														GameHolder,
 														PlayerFragment.PlayersObserver{
 	private static final String ARG_GAME = "game";
 	private static final String PREF_DEFAULT_NUMBER_OF_PLAYER = "default_number_of_player";
 	private static final String PREF_DEFAULT_IS_THREE_POINT_MATCH = "default_is_three_point_match";
 	private final static String PREF_PLAYER_PREFIX = "player_prefix";
 
-	private OnUpdatePlayersListener onupdateplayerslistener;
+	private OnUpdatePlayersListener onupdateplayerslistener = null;
 	private Game game = null;
-	private SectionsPagerAdapter mSectionsPagerAdapter;
-	private ViewPager mViewPager;
+	private SectionsPagerAdapter adapter = null;
+	private ViewPager pager = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -59,19 +62,18 @@ public class MainActivity extends Activity implements ActionBar.TabListener,
                 game = new Game();
             }
         }
-		final ActionBar actionBar = getActionBar();
-		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+		getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
-		mViewPager = (ViewPager) findViewById(R.id.pager);
+		pager = (ViewPager) findViewById(R.id.pager);
 
-		mViewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+		pager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
 			@Override
 			public void onPageSelected(int position) {
-				actionBar.setSelectedNavigationItem(position);
-				handleNavigationButtons(position, actionBar);
+				getActionBar().setSelectedNavigationItem(position);
+				handleNavigationButtons(position, getActionBar());
 			}
 		});
-        update(Game.UPDATE_MODE.CREATE);
+        update(GameHolder.UPDATE_MODE.CREATE);
 	}
 
 	private void handleNavigationButtons(int position, ActionBar actionBar) {
@@ -86,9 +88,9 @@ public class MainActivity extends Activity implements ActionBar.TabListener,
 		final ActionBar actionBar = getActionBar();
 		actionBar.addTab(
 				actionBar.newTab()
-						.setText(mSectionsPagerAdapter.getPageTitle(actionBar.getTabCount()))
+						.setText(adapter.getPageTitle(actionBar.getTabCount()))
 						.setTabListener(this));
-        mSectionsPagerAdapter.notifyDataSetChanged();
+        adapter.notifyDataSetChanged();
 	}
 
 	@Override
@@ -110,7 +112,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener,
             return false;
         case R.id.action_save:
             try {
-                game.save(this, false);
+                game.save(this, new SimpleDateFormat("yyyy-MM-dd hh:mm", Locale.US).format(new Date()));
             } catch (IOException e) {
                 Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
             }
@@ -129,7 +131,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener,
 				if(filename!=null){
 					try {
 						game = Game.load(MainActivity.this, filename);
-                        update(Game.UPDATE_MODE.CREATE);
+                        update(GameHolder.UPDATE_MODE.CREATE);
 					} catch (Exception e) {
                         Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
 					}
@@ -165,7 +167,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener,
 				if (!game.make()) {
 					Toast.makeText(MainActivity.this, getString(R.string.message_round_create_error), Toast.LENGTH_LONG).show();
 				}
-				update(Game.UPDATE_MODE.CREATE);
+				update(GameHolder.UPDATE_MODE.CREATE);
 			}
 		})
 		.show();
@@ -173,7 +175,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener,
 
 	@Override
 	public void onTabSelected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
-		mViewPager.setCurrentItem(tab.getPosition());
+		pager.setCurrentItem(tab.getPosition());
 	}
 
 	@Override
@@ -195,7 +197,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener,
 		@Override
 		public Fragment getItem(int position) {
 			if(position==0){
-				return PlayerFragment.newInstance(game.getPlayers());
+				return PlayerFragment.newInstance();
 			}else{
 				return MatchFragment.newInstance(position-1);
 			}
@@ -203,7 +205,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener,
 
 		@Override
 		public int getCount() {
-			return game.getCount()+1;
+			return game.getRounds().size()+1;
 		}
 
 		@Override
@@ -233,7 +235,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener,
 	}
 
 	@Override
-	public void update(Game.UPDATE_MODE mode) {
+	public void update(GameHolder.UPDATE_MODE mode) {
 		Player.updateRank(game.getPlayers());
 		if(onupdateplayerslistener!=null){
             onupdateplayerslistener.onUpdatePlayer(game.getPlayers());
@@ -241,14 +243,15 @@ public class MainActivity extends Activity implements ActionBar.TabListener,
         switch(mode){
             case ADD:
                 addTab();
-				mViewPager.setCurrentItem(mSectionsPagerAdapter.getCount()-1);
+				pager.setCurrentItem(adapter.getCount() - 1);
                 break;
             case CREATE:
                 final ActionBar actionBar = getActionBar();
+				assert(actionBar!=null);
                 actionBar.removeAllTabs();
-                mSectionsPagerAdapter = new SectionsPagerAdapter(getFragmentManager());
-                mViewPager.setAdapter(mSectionsPagerAdapter);
-                for(int i=0;i<game.getCount()+1;++i){
+                adapter = new SectionsPagerAdapter(getFragmentManager());
+                pager.setAdapter(adapter);
+                for(int i=0;i<game.getRounds().size()+1;++i){
                     addTab();
                 }
                 break;
@@ -257,16 +260,16 @@ public class MainActivity extends Activity implements ActionBar.TabListener,
         }
 	}
 
-	Game.OnUpdateMatchListener onupdatematchlistener = null;
+	private GameHolder.OnUpdateMatchListener onUpdateMatchListener = null;
 	@Override
 	public void updateMatch() {
-		if(onupdatematchlistener != null) {
-			onupdatematchlistener.updateMatch();
+		if(onUpdateMatchListener != null) {
+			onUpdateMatchListener.updateMatch();
 		}
 	}
 
 	@Override
-	public void setOnUpdateMatchListener(Game.OnUpdateMatchListener listener) {
-		this.onupdatematchlistener = listener;
+	public void setOnUpdateMatchListener(GameHolder.OnUpdateMatchListener listener) {
+		this.onUpdateMatchListener = listener;
 	}
 }

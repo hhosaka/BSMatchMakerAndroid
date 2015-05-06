@@ -4,73 +4,55 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
-import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
-import java.util.Locale;
 import java.util.Stack;
-
-import com.nag.android.util.PreferenceHelper;
 
 import android.content.Context;
 
 public class Game implements Serializable{
 	static final long serialVersionUID = 1L;
-    private static final String TEMP_FILENAME = "auto_save";
 	private static final String OPTION = ".bsmm";
+    private static final String TEMP_FILENAME = "auto_save"+OPTION;
 
-    private String filename = null;
+//    private String filename = null;
     public boolean isThreePointMatch = false;
     private Player[] players = null;
     private final Stack<Round> rounds = new Stack<Round>();
 
-    enum UPDATE_MODE{DATA,ADD,CREATE}
-	interface OnUpdateMatchListener{
-		void updateMatch();
-	}
-	interface GameHolder{
-		Game getGame();
-		void update(UPDATE_MODE mode);
-		void updateMatch();
-		void setOnUpdateMatchListener(OnUpdateMatchListener listener);
+	Game(){
+		this(new Player[0],false);
 	}
 
-	public int getCount(){
-		return rounds.size();
+	Game(Player[]players, boolean isThreePointMatch){
+		this.players = players;
+		this.isThreePointMatch = isThreePointMatch;
 	}
 
-	public Round getRound(int round){
-		return rounds.get(round);
-	}
-	public Match.STATUS getStatus(){return getLatestRound().getStatus();}
+	List<Round>getRounds(){return rounds;}
+	Player[] getPlayers(){return players;}
+	Round getLatestRound(){return rounds.peek();}
+	Match.STATUS getStatus(){return getLatestRound().getStatus();}
 
-	public void save(Context context,boolean isTemporary) throws IOException{
+	public void save(Context context, String filename) throws IOException{
         if(rounds.size()>0) {
-            String filename;
-            if (isTemporary) {
-                filename = TEMP_FILENAME;
-            } else {
-                if (this.filename == null) {
-                    this.filename = new SimpleDateFormat("yyyy-MM-dd hh:mm", Locale.US).format(new Date());
-                }
-                filename = this.filename;
-            }
-            filename += OPTION;
+			if(filename==null) {
+				filename = TEMP_FILENAME;
+			}
             ObjectOutputStream o = new ObjectOutputStream(context.openFileOutput(filename, 0));
             o.writeObject(this);
             o.close();
         }
 	}
 
-
     public static Game load(Context context) throws IOException, ClassNotFoundException{
-        String filename = PreferenceHelper.getInstance(context).getString(TEMP_FILENAME,null);
-        if(filename != null) {
-            return load(context, filename);
-        }
-        return new Game();
+		try {
+			return load(context, TEMP_FILENAME);
+		}catch(IOException e){
+			return new Game();
+		}
     }
 
 	public static Game load(Context context, String filename) throws IOException, ClassNotFoundException{
@@ -81,46 +63,21 @@ public class Game implements Serializable{
 		return game;
 	}
 
-	Player[] getPlayers(){
-		return players;
-	}
-
-    Game(){
-        this(new Player[0],false);
-    }
-
-    Game(Player[]players, boolean isThreePointMatch){
-        this.players = players;
-        this.isThreePointMatch = isThreePointMatch;
-    }
-
-	private static Player Confirm(Stack<Player> stack,Stack<Player> temp, Player player) {
-		while (stack.size() > 0) {
-			Player ret = stack.pop();
-			if (!ret.hasMatched(player)) {
-				return ret;
-			} else {
-				temp.push(ret);
+	private static Player confirm(Stack<Player> players, Player target) {
+		for(Player player: players){
+			if(!player.hasMatched(target)){
+				players.remove(player);
+				return player;
 			}
 		}
 		return null;
 	}
 
-	private static Player Confirm(Stack<Player> stack, Player player) {
-		Stack<Player> temp = new Stack<Player>();
-		Player ret= Confirm(stack, temp, player);
-		for(Player p : temp){
-			stack.push(p);
-		}
-		return ret;
-	}
-
-
 	public boolean make() {
 		final int MAX_TRY_COUNT = 10;
 
         if (rounds.size()>0 && getLatestRound().getStatus() == Match.STATUS.MATCHING
-                || rounds.size()>0 && getLatestRound().getStatus() == Match.STATUS.UNDEF) {
+                || rounds.size()>0 && getLatestRound().getStatus() == Match.STATUS.UNDEFINED) {
             rounds.pop();
         }
 		for(int i=0; i<MAX_TRY_COUNT; ++i){
@@ -133,6 +90,7 @@ public class Game implements Serializable{
         rounds.push(new Round(rounds.size()+1));
         return false;
 	}
+
 	private static Player[] shufflePlayer(Player[]players){
 		List<Player>list = Arrays.asList(players.clone());
 		Collections.shuffle(list);
@@ -150,7 +108,7 @@ public class Game implements Serializable{
 				if (stack.size() == 0) {
 					stack.push(player);
 				} else {
-					Player p = Confirm(stack, player);
+					Player p = confirm(stack, player);
 					if (p != null) {
 						Match m = new Match(++id, p, player);
 						ret.add(m);
@@ -169,20 +127,9 @@ public class Game implements Serializable{
         return ret;
 	}
 
-	Round getLatestRound() {
-		return rounds.peek();
-	}
-
-//	public void Reset() {
-//		if (rounds.size() > 0) {
-//			if (rounds.peek().getStatus() == Match.STATUS.MATCHING) {
-//				rounds.pop();
-//			}
-//		}
-//	}
 	public void bind(Context context) throws IOException{
 		getLatestRound().bind();
-		save(context,true);
+		save(context, null);
 	}
 
 	public long getStartTime(){

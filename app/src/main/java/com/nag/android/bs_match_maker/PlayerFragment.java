@@ -24,7 +24,7 @@ public class PlayerFragment extends Fragment implements OnUpdatePlayersListener,
 		void setOnUpdatePlayersListener(OnUpdatePlayersListener listener);
 	}
 
-	public static PlayerFragment newInstance(Player[]players) {
+	public static PlayerFragment newInstance() {
 		return new PlayerFragment();
 	}
 
@@ -49,9 +49,9 @@ public class PlayerFragment extends Fragment implements OnUpdatePlayersListener,
 	}
 
 	private Game getGame(){
-		return ((Game.GameHolder)getActivity()).getGame();
+		return ((GameHolder)getActivity()).getGame();
 	}
-	public Player[]getPlayers(){
+	Player[]getPlayers(){
 		return getGame().getPlayers();
 	}
 
@@ -84,7 +84,7 @@ public class PlayerFragment extends Fragment implements OnUpdatePlayersListener,
 
 		public String getTitle(Player player,int width){
 			final int LIMIT_WIDTH = 500;
-			StringBuffer sb=new StringBuffer();
+			StringBuilder sb=new StringBuilder();
 			sb.append(String.format("%1$3d", player.getRank()));
 			sb.append(")");
 			sb.append(String.format("%1$03d", player.getId()));
@@ -123,7 +123,7 @@ public class PlayerFragment extends Fragment implements OnUpdatePlayersListener,
 					player.setName(editView.getText().toString());
 					player.setDropped(cb.isChecked());
 					if(cb.isChecked()){
-						((Game.GameHolder)getActivity()).updateMatch();
+						((GameHolder)getActivity()).updateMatch();
 					}
 					listview.getAdapter().getView(position, view, listview);
 				}

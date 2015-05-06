@@ -9,9 +9,9 @@ import java.util.List;
 class Player implements Serializable{
 	private static final long serialVersionUID = Game.serialVersionUID;
 	private String name;
-	private List<Match> matches = new ArrayList<Match>();
+	private final List<Match> matches = new ArrayList<Match>();
 	private boolean dropped = false;
-	public int id;
+	public final int id;
 	private int rank;
 
 	public int getId(){return id;}
@@ -58,7 +58,7 @@ class Player implements Serializable{
 		}
 	}
 
-	public float getOpponentPoint() {
+	float getOpponentPoint() {
 		float ret = 0;
 		int count = 0;
 		for (Match match : matches) {
@@ -94,7 +94,7 @@ class Player implements Serializable{
 		return false;
 	}
 
-	public static int comparison(Player a, Player b) {
+	private static int comparison(Player a, Player b) {
 		int ret;
 		float fret;
 		if ((ret = b.getMatchPoint() - a.getMatchPoint()) != 0) {
@@ -115,23 +115,19 @@ class Player implements Serializable{
 		}
 	}
 
-	public static int comparison_with_id(Player a, Player b) {
-		int ret;
-		if ((ret = comparison(a, b)) != 0) {
-			return ret;
-		} else {
-			return a.id - b.id;
-		}
-	}
-
 	public static class ComparisonWithId implements Comparator<Player> {
 		@Override
 		public int compare(Player lhs, Player rhs) {
-			return comparison_with_id(lhs, rhs);
+			int ret;
+			if ((ret = comparison(lhs, rhs)) != 0) {
+				return ret;
+			} else {
+				return lhs.id - rhs.id;
+			}
 		}
 	}
 
-	public static Player[] updateRank(Player[] players) {
+	public static void updateRank(Player[] players) {
 		int rank = 0;
 		int i = 0;
 		Player prev = null;
@@ -145,7 +141,6 @@ class Player implements Serializable{
 			player.rank = rank;
 			prev = player;
 		}
-		return players;
 	}
 
 	public static Player[] create(String prefix, int count){
@@ -153,7 +148,7 @@ class Player implements Serializable{
 		for (int i = 0; i < count; ++i) {
 			ret.add(new Player(i, prefix + String.format("%1$03d", i)));
 		}
-		return ret.toArray(new Player[0]);
+		return ret.toArray(new Player[ret.size()]);
 	}
 
     public String[] getLog(){
@@ -161,6 +156,6 @@ class Player implements Serializable{
         for(Match match : matches){
             buf.add(match.getLogString(this));
         }
-        return buf.toArray(new String[0]);
+        return buf.toArray(new String[buf.size()]);
     }
 }
