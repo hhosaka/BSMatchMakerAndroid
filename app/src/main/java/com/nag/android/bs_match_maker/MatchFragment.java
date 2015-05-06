@@ -141,7 +141,7 @@ public class MatchFragment extends Fragment implements OnItemClickListener, Resu
 	public void onItemClick(final AdapterView<?> adapter, final View view,final int position, long id) {
 		if(round.getStatus()==STATUS.PLAYING) {
 			final Match match = (Match) adapter.getItemAtPosition(position);
-			new ResultSelector(view.getContext(), getGame(), match).show(new ResultSelector.OnResultListener() {
+			new ResultSelector(view.getContext(), match).show(getGame().isThreePointMatch, new ResultSelector.OnResultListener() {
 				@Override
 				public void onSelected() {
 					adapter.getAdapter().getView(position, view, listview);

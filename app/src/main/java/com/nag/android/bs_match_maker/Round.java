@@ -2,12 +2,17 @@ package com.nag.android.bs_match_maker;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Round implements Serializable{
 	private static final long serialVersionUID = Game.serialVersionUID;
-	private final ArrayList<Match> matches=new ArrayList<Match>();
+	private final List<Match> matches=new ArrayList<Match>();
 	private final int round;
     private long start_time=0;
+
+	public Round(int round) {
+		this.round = round;
+	}
 
 	public Match[]getMatches(){
 		return matches.toArray(new Match[matches.size()]);
@@ -31,10 +36,8 @@ public class Round implements Serializable{
 		return "The " + ConvertString(round) + " Round "+getStatusTitle(getStatus());
 	}
 
-	public Round(int round) {
-		this.round = round;
-	}
 
+	// TODO it should be moved to UI layer
 	private static String getStatusTitle(Match.STATUS status ) {
 		switch (status) {
 		case UNDEFINED:

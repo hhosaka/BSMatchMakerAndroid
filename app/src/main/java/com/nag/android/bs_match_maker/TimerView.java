@@ -10,8 +10,12 @@ import android.widget.TextView;
 
 
 public class TimerView extends TextView {
-
 	private final Handler handler=new Handler();
+	private Timer timer = null;
+
+	public TimerView(Context context) {
+		super(context);
+	}
 	public TimerView(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
 	}
@@ -20,8 +24,6 @@ public class TimerView extends TextView {
 		super(context, attrs);
 	}
 
-	private Timer timer = null;
-//	private long initial;
     public void start(){
         start(System.currentTimeMillis());
     }
@@ -45,10 +47,4 @@ public class TimerView extends TextView {
 		timer.cancel();
 		timer = null;
 	}
-
-	public TimerView(Context context) {
-		super(context);
-	}
-
-	
 }

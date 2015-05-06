@@ -36,4 +36,3 @@ class Result implements Serializable{
         return (point[0]<<8)|point[1];
     }
 }
-

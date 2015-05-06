@@ -39,6 +39,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener,
 	private final static String PREF_PLAYER_PREFIX = "player_prefix";
 
 	private OnUpdatePlayersListener onupdateplayerslistener = null;
+	private GameHolder.OnUpdateMatchListener onUpdateMatchListener = null;
 	private Game game = null;
 	private SectionsPagerAdapter adapter = null;
 	private ViewPager pager = null;
@@ -260,7 +261,6 @@ public class MainActivity extends Activity implements ActionBar.TabListener,
         }
 	}
 
-	private GameHolder.OnUpdateMatchListener onUpdateMatchListener = null;
 	@Override
 	public void updateMatch() {
 		if(onUpdateMatchListener != null) {

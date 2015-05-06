@@ -16,26 +16,6 @@ class Match implements Serializable{
 
 	public enum STATUS {UNDEFINED, MATCHING, READY, PLAYING, DONE }
 
-	public Player[] getPlayers(){
-		return players;
-	}
-
-	public STATUS getStatus(){
-		return status;
-	}
-
-    public Result getResult(){
-        return result;
-    }
-	public void update(Result result) {
-        this.result = result;
-		status = STATUS.DONE;
-	}
-
-	public boolean isBYEGame() {
-		return players[PLAYER2]==BYE;
-	}
-
 	Match(int id, Player player1, Player player2) {
 		this.id = id;
         players = new Player[2];
@@ -49,11 +29,26 @@ class Match implements Serializable{
 
 	Match(int id, Player player, int fullpoint){
 		this(id,player,BYE);
-        this.result = new Result(fullpoint,0);
+		update(new Result(fullpoint,0));
+	}
+
+	public Player[] getPlayers(){
+		return players;
+	}
+	public STATUS getStatus(){
+		return status;
+	}
+	public Result getResult(){return result;}
+	public boolean isBYEGame() {
+		return players[PLAYER2]==BYE;
+	}
+
+	public void update(Result result) {
+		this.result = result;
 		status = STATUS.DONE;
 	}
 
-	private static int GetMatchPoint(int player, int opponent) {
+	private static int calcMatchPoint(int player, int opponent) {
 		if (player > opponent) {
 			return 3;
 		} else if (player < opponent) {
@@ -74,10 +69,6 @@ class Match implements Serializable{
 	private int GetMyPoint(Player player) {
 		return this.result.getPoint(MyIndex(player));
 	}
-
-//	public int GetOpponentMatchPoint(Player player) {
-//		return this.players[OpponentIndex(player)].getMatchPoint();
-//	}
 
     private Player getOpponent(Player player){return players[OpponentIndex(player)];}
 
@@ -131,7 +122,7 @@ class Match implements Serializable{
 	}
 
 	public int getMatchPoint(Player player){
-		return GetMatchPoint(GetMyPoint(player), getOpponentPoint(player));
+		return calcMatchPoint(GetMyPoint(player), getOpponentPoint(player));
 	}
 
 	public int getWinPoint(Player player) {

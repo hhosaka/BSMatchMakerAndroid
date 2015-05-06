@@ -18,17 +18,16 @@ public class ResultSelector extends RadioGroup {
         }
     }
 
-    private final Game game;
+//    private final Game game;
 	private final Match match;
 
-	public ResultSelector(Context context, Game game, Match match) {
+	public ResultSelector(Context context, Match match) {
 		super(context);
-        this.game = game;
 		this.match = match;
 	}
 
-	private LabeledResult[] getLabels(){
-		if(game.isThreePointMatch){
+	private LabeledResult[] getLabels(boolean isThreePointMatch){
+		if(isThreePointMatch){
             return new LabeledResult[]{
 			new LabeledResult("2-0:"+match.getPlayers()[0].getName()+" win", new Result(2,0)),
             new LabeledResult("2-1:"+match.getPlayers()[0].getName()+" win", new Result(2,1)),
@@ -46,7 +45,7 @@ public class ResultSelector extends RadioGroup {
 		}
 	}
 
-    private int getCurrentPosition(LabeledResult[] items){
+    private int getPosition(LabeledResult[] items){
         if(match.getStatus()== Match.STATUS.DONE) {
             for (int i = 0; i < items.length; ++i) {
                 if(items[i].getValue().equals(match.getResult())){
@@ -59,12 +58,12 @@ public class ResultSelector extends RadioGroup {
         }
     }
 
-    public void show(final OnResultListener listener){
-        final LabeledResult[] items = getLabels();
+    public void show(boolean isThreePointMatch, final OnResultListener listener){
+        final LabeledResult[] items = getLabels(isThreePointMatch);
         new AlertDialog.Builder(getContext())
             .setIcon(android.R.drawable.ic_dialog_info)
             .setTitle(match.toString())
-            .setSingleChoiceItems(items, getCurrentPosition(items), new DialogInterface.OnClickListener() {
+            .setSingleChoiceItems(items, getPosition(items), new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int whichButton) {
                     if (whichButton >= 0) {
