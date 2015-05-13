@@ -31,18 +31,17 @@ import android.widget.Toast;
 import com.nag.android.util.PreferenceHelper;
 
 public class MainActivity extends Activity implements ActionBar.TabListener,
-														GameHolder,
-														PlayerFragment.PlayersObserver{
+														AppCore{
 	private static final String ARG_GAME = "game";
 	private static final String PREF_DEFAULT_NUMBER_OF_PLAYER = "default_number_of_player";
 	private static final String PREF_DEFAULT_IS_THREE_POINT_MATCH = "default_is_three_point_match";
 	private final static String PREF_PLAYER_PREFIX = "player_prefix";
 
 	private OnUpdatePlayersListener onupdateplayerslistener = null;
-	private GameHolder.OnUpdateMatchListener onUpdateMatchListener = null;
-	private Game game = null;
+	private OnUpdateMatchListener onUpdateMatchListener = null;
 	private SectionsPagerAdapter adapter = null;
 	private ViewPager pager = null;
+	private Game game = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -74,7 +73,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener,
 				handleNavigationButtons(position, getActionBar());
 			}
 		});
-        update(GameHolder.UPDATE_MODE.CREATE);
+        updatePlayer(UPDATE_MODE.CREATE);
 	}
 
 	private void handleNavigationButtons(int position, ActionBar actionBar) {
@@ -132,7 +131,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener,
 				if(filename!=null){
 					try {
 						game = Game.load(MainActivity.this, filename);
-                        update(GameHolder.UPDATE_MODE.CREATE);
+                        updatePlayer(UPDATE_MODE.CREATE);
 					} catch (Exception e) {
                         Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
 					}
@@ -168,7 +167,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener,
 				if (!game.make()) {
 					Toast.makeText(MainActivity.this, getString(R.string.message_round_create_error), Toast.LENGTH_LONG).show();
 				}
-				update(GameHolder.UPDATE_MODE.CREATE);
+				updatePlayer(UPDATE_MODE.CREATE);
 			}
 		})
 		.show();
@@ -226,17 +225,17 @@ public class MainActivity extends Activity implements ActionBar.TabListener,
 	}
 
 	@Override
-	public void setOnUpdatePlayersListener(OnUpdatePlayersListener listener) {
-		this.onupdateplayerslistener = listener;
-	}
-
-	@Override
 	public Game getGame() {
 		return game;
 	}
 
 	@Override
-	public void update(GameHolder.UPDATE_MODE mode) {
+	public void setOnUpdatePlayersListener(OnUpdatePlayersListener listener) {
+		this.onupdateplayerslistener = listener;
+	}
+
+	@Override
+	public void updatePlayer(AppCore.UPDATE_MODE mode) {
 		Player.updateRank(game.getPlayers());
 		if(onupdateplayerslistener!=null){
             onupdateplayerslistener.onUpdatePlayer(game.getPlayers());
@@ -262,14 +261,14 @@ public class MainActivity extends Activity implements ActionBar.TabListener,
 	}
 
 	@Override
+	public void setOnUpdateMatchListener(OnUpdateMatchListener listener) {
+		this.onUpdateMatchListener = listener;
+	}
+
+	@Override
 	public void updateMatch() {
 		if(onUpdateMatchListener != null) {
 			onUpdateMatchListener.updateMatch();
 		}
-	}
-
-	@Override
-	public void setOnUpdateMatchListener(GameHolder.OnUpdateMatchListener listener) {
-		this.onUpdateMatchListener = listener;
 	}
 }

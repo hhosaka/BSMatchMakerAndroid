@@ -13,6 +13,8 @@ import java.util.Stack;
 import android.content.Context;
 
 public class Game implements Serializable{
+	interface GameHolder{
+	}
 	static final long serialVersionUID = 1L;
 	private static final String OPTION = ".bsmm";
     private static final String TEMP_FILENAME = "auto_save"+OPTION;
@@ -89,6 +91,10 @@ public class Game implements Serializable{
 		}
         rounds.push(new Round(rounds.size()+1));
         return false;
+	}
+
+	public long start(){
+		return getLatestRound().start();
 	}
 
 	private static Player[] shufflePlayer(Player[]players){

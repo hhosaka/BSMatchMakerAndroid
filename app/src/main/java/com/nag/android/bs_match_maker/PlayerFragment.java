@@ -17,12 +17,8 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
-public class PlayerFragment extends Fragment implements OnUpdatePlayersListener, OnItemClickListener{
+public class PlayerFragment extends Fragment implements AppCore.OnUpdatePlayersListener, OnItemClickListener{
 	private ListView listview = null;
-
-	public interface PlayersObserver{
-		void setOnUpdatePlayersListener(OnUpdatePlayersListener listener);
-	}
 
 	public static PlayerFragment newInstance() {
 		return new PlayerFragment();
@@ -45,11 +41,11 @@ public class PlayerFragment extends Fragment implements OnUpdatePlayersListener,
 	@Override
 	public void onAttach(Activity activity){
 		super.onAttach(activity);
-		((PlayersObserver)getActivity()).setOnUpdatePlayersListener(this);
+		((AppCore)getActivity()).setOnUpdatePlayersListener(this);
 	}
 
 	private Game getGame(){
-		return ((GameHolder)getActivity()).getGame();
+		return ((AppCore)getActivity()).getGame();
 	}
 	Player[]getPlayers(){
 		return getGame().getPlayers();
@@ -123,7 +119,7 @@ public class PlayerFragment extends Fragment implements OnUpdatePlayersListener,
 					player.setName(editView.getText().toString());
 					player.setDropped(cb.isChecked());
 					if(cb.isChecked()){
-						((GameHolder)getActivity()).updateMatch();
+						((AppCore)getActivity()).updateMatch();
 					}
 					listview.getAdapter().getView(position, view, listview);
 				}
