@@ -36,7 +36,7 @@ public class Game implements Serializable{
 	List<Round>getRounds(){return rounds;}
 	Player[] getPlayers(){return players;}
 	Round getLatestRound(){return rounds.peek();}
-	Match.STATUS getStatus(){return getLatestRound().getStatus();}
+	Match.STATUS getStatus(){return rounds.empty()? Match.STATUS.UNDEFINED : getLatestRound().getStatus();}
 
 	public void save(Context context, String filename) throws IOException{
         if(rounds.size()>0) {

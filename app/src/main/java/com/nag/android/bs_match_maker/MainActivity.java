@@ -8,6 +8,8 @@ import java.util.Locale;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
@@ -30,12 +32,9 @@ import android.widget.Toast;
 
 import com.nag.android.util.PreferenceHelper;
 
-public class MainActivity extends Activity implements ActionBar.TabListener,
-														AppCore{
+public class MainActivity extends Activity implements ActionBar.TabListener, AppCore, CreateGameDialog.CreateGameHandler
+{
 	private static final String ARG_GAME = "game";
-	private static final String PREF_DEFAULT_NUMBER_OF_PLAYER = "default_number_of_player";
-	private static final String PREF_DEFAULT_IS_THREE_POINT_MATCH = "default_is_three_point_match";
-	private final static String PREF_PLAYER_PREFIX = "player_prefix";
 
 	private OnUpdatePlayersListener onupdateplayerslistener = null;
 	private OnUpdateMatchListener onUpdateMatchListener = null;
@@ -51,7 +50,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener,
 		if(savedInstanceState!=null){
 			game = (Game)savedInstanceState.getSerializable(ARG_GAME);
 			game.restore();
-			if(game.getLatestRound().getStatus()== Match.STATUS.PLAYING){
+			if(game.getStatus()== Match.STATUS.PLAYING){
 				((TimerView)findViewById(R.id.TimerTextTimer)).start(game.getStartTime());
 			}
 		}else{
@@ -105,7 +104,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener,
 			startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(getResources().getString(R.string.url_help))));
 			break;
 		case R.id.action_initial:
-			createGame();
+			new CreateGameDialog().show(getFragmentManager(),"dialog");
 			return false;
 		case R.id.action_open:
             openGame();
@@ -125,52 +124,19 @@ public class MainActivity extends Activity implements ActionBar.TabListener,
 	}
 
 	private void openGame(){
-		DataSelector.show(this, getString(R.string.action_open), new DataSelector.ResultListener(){
+		DataSelector.show(this, getString(R.string.action_open), new DataSelector.ResultListener() {
 			@Override
 			public void onSelected(String filename) {
-				if(filename!=null){
+				if (filename != null) {
 					try {
 						game = Game.load(MainActivity.this, filename);
-                        updatePlayer(UPDATE_MODE.CREATE);
+						updatePlayer(UPDATE_MODE.CREATE);
 					} catch (Exception e) {
-                        Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
+						Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
 					}
 				}
 			}
 		});
-	}
-
-	private void createGame() {
-		final int MAX_PLAYER = 128;
-		final int MIN_PLAYER = 2;
-
-		View view = LayoutInflater.from(this).inflate(R.layout.view_inital, null);// TODO how should I handle 2nd parameter
-		final NumberPicker np = (NumberPicker)view.findViewById(R.id.numberPickerPlayer);
-		np.setMaxValue(MAX_PLAYER);
-		np.setMinValue(MIN_PLAYER);
-		np.setValue(PreferenceHelper.getInstance(this).getInt(PREF_DEFAULT_NUMBER_OF_PLAYER, 8));
-		final CheckBox cb = (CheckBox)view.findViewById(R.id.checkBoxIsThreePointMatch);
-        cb.setChecked(PreferenceHelper.getInstance(this).getBoolean(PREF_DEFAULT_IS_THREE_POINT_MATCH, false));
-		final TextView prefix = (EditText)view.findViewById(R.id.editTextPlayerPrefix);
-		prefix.setText(PreferenceHelper.getInstance(this).getString(PREF_PLAYER_PREFIX,getString(R.string.label_player_prefix_default)));
-		new AlertDialog.Builder(this)
-		.setTitle(getString(R.string.action_initial))
-		.setView(view)
-		.setNegativeButton(getString(R.string.label_cancel), null)
-		.setPositiveButton(getString(R.string.label_ok), new OnClickListener() {
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				PreferenceHelper.getInstance(MainActivity.this).putInt(PREF_DEFAULT_NUMBER_OF_PLAYER, np.getValue());
-				PreferenceHelper.getInstance(MainActivity.this).putBoolean(PREF_DEFAULT_IS_THREE_POINT_MATCH, cb.isChecked());
-				PreferenceHelper.getInstance(MainActivity.this).putString(PREF_PLAYER_PREFIX, prefix.getText().toString());
-				game = new Game(Player.create(prefix.getText().toString(), np.getValue()), cb.isChecked());
-				if (!game.make()) {
-					Toast.makeText(MainActivity.this, getString(R.string.message_round_create_error), Toast.LENGTH_LONG).show();
-				}
-				updatePlayer(UPDATE_MODE.CREATE);
-			}
-		})
-		.show();
 	}
 
 	@Override
@@ -270,5 +236,14 @@ public class MainActivity extends Activity implements ActionBar.TabListener,
 		if(onUpdateMatchListener != null) {
 			onUpdateMatchListener.updateMatch();
 		}
+	}
+
+	@Override
+	public void onCreateGame(String prefix, int num_of_player, boolean isThirdPointMatch){
+		game = new Game(Player.create(prefix, num_of_player), isThirdPointMatch);
+		if (!game.make()) {
+			Toast.makeText(this, getString(R.string.message_round_create_error), Toast.LENGTH_LONG).show();
+		}
+		updatePlayer(UPDATE_MODE.CREATE);
 	}
 }

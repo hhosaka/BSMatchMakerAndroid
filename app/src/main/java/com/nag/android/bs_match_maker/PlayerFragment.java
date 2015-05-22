@@ -53,10 +53,8 @@ public class PlayerFragment extends Fragment implements AppCore.OnUpdatePlayersL
 
 	@Override
 	public void onUpdatePlayer(Player[] players) {
-		InternalAdapter adapter = new InternalAdapter(getActivity(), players);
-        if(listview!=null) {// TODO
-            listview.setAdapter(adapter);
-        }
+		assert(listview!=null);
+        listview.setAdapter(new InternalAdapter(getActivity(), players));
 	}
 
 	private class InternalAdapter extends ArrayAdapter<Player>{
@@ -74,7 +72,6 @@ public class PlayerFragment extends Fragment implements AppCore.OnUpdatePlayersL
 				convertView = inflater.inflate(android.R.layout.simple_list_item_1, null);
 			}
 			((TextView)convertView.findViewById(android.R.id.text1)).setText(getTitle(getItem(position), parent.getWidth()));
-//			((TextView)convertView.findViewById(android.R.id.text1)).setText("temp");
 			return convertView;
 		}
 
