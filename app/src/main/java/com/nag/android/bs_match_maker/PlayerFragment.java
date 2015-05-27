@@ -54,7 +54,9 @@ public class PlayerFragment extends Fragment implements AppCore.OnUpdatePlayersL
 	@Override
 	public void onUpdatePlayer(Player[] players) {
 		assert(listview!=null);
-        listview.setAdapter(new InternalAdapter(getActivity(), players));
+		if(listview!=null) {// TODO need more consideration
+			listview.setAdapter(new InternalAdapter(getActivity(), players));
+		}
 	}
 
 	private class InternalAdapter extends ArrayAdapter<Player>{

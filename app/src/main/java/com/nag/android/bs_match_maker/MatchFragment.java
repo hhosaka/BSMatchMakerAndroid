@@ -22,7 +22,7 @@ import java.io.IOException;
 public class MatchFragment extends Fragment implements OnItemClickListener, AppCore.OnUpdateMatchListener {
 
 	private static final String ARG_ROUND = "round";
-	private Round round;
+	private int round;
 	private ListView listview = null;
 	private Button buttonFix = null;
 	private Button buttonStart = null;
@@ -47,11 +47,14 @@ public class MatchFragment extends Fragment implements OnItemClickListener, AppC
 	private Game getGame(){
 		return getAppCore().getGame();
 	}
+	private Round getRound(){return getGame().getRounds().get(round);}
+	private STATUS getStatus(){return getRound().getStatus();}
+	private Match[] getMatches(){return getRound().getMatches();}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		round = getGame().getRounds().get(getArguments().getInt(ARG_ROUND));
+		round = getArguments().getInt(ARG_ROUND);
 		View rootView = inflater.inflate(R.layout.fragment_match, container, false);
 		timerview = (TimerView)getActivity().findViewById(R.id.TimerTextTimer);
 		buttonFix = (Button)getActivity().findViewById(R.id.buttonFix);
@@ -84,14 +87,14 @@ public class MatchFragment extends Fragment implements OnItemClickListener, AppC
 				if(!getGame().make()){
                     Toast.makeText(getActivity(),getString(R.string.message_round_create_error),Toast.LENGTH_LONG).show();
                 }
-				listview.setAdapter(new InternalAdapter(getActivity(), round.getMatches()));
+				listview.setAdapter(new InternalAdapter(getActivity(), getMatches()));
 			}
 		});
 
-		listview.setAdapter(new InternalAdapter(getActivity(), round.getMatches()));
+		listview.setAdapter(new InternalAdapter(getActivity(), getMatches()));
 		listview.setOnItemClickListener(this);
 		setUIByStatus();
-		if(round.getStatus()==STATUS.MATCHING) {
+		if(getStatus()==STATUS.MATCHING) {
 			getAppCore().setOnUpdateMatchListener(this);// TODO , it should be ADD?
 		}
 		return rootView;
@@ -99,11 +102,11 @@ public class MatchFragment extends Fragment implements OnItemClickListener, AppC
 
 	@Override
 	public void updateMatch() {
-		if(round.getStatus()==STATUS.MATCHING) {
+		if(getStatus()==STATUS.MATCHING) {
 			if (!getGame().make()) {
 				Toast.makeText(getActivity(), getString(R.string.message_round_create_error), Toast.LENGTH_LONG).show();
 			}
-			listview.setAdapter(new InternalAdapter(getActivity(), round.getMatches()));
+			listview.setAdapter(new InternalAdapter(getActivity(), getMatches()));
 		}
 	}
 
@@ -140,7 +143,7 @@ public class MatchFragment extends Fragment implements OnItemClickListener, AppC
 
 	@Override
 	public void onItemClick(final AdapterView<?> adapter, final View view,final int position, long id) {
-		if(round.getStatus()==STATUS.PLAYING) {
+		if(getStatus()==STATUS.PLAYING) {
 			final Match match = (Match) adapter.getItemAtPosition(position);
 			new ResultSelector(view.getContext(), match).show(getGame().isThreePointMatch, new ResultSelector.OnResultListener() {
 				@Override
@@ -150,15 +153,16 @@ public class MatchFragment extends Fragment implements OnItemClickListener, AppC
 					Context context = getActivity();
 					if (game.getStatus() == STATUS.DONE) {
 						timerview.stop();
-						try {
-							game.save(context, null);
-						} catch (IOException e) {
-							Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
-						}
 						if (!game.make()) {
 							Toast.makeText(context, getString(R.string.message_round_create_error), Toast.LENGTH_LONG).show();
+						}else {
+							try {
+								game.save(context, null);
+							} catch (IOException e) {
+								Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
+							}
+							((AppCore) getActivity()).updatePlayer(AppCore.UPDATE_MODE.ADD);
 						}
-						((AppCore)getActivity()).updatePlayer(AppCore.UPDATE_MODE.ADD);
 					} else {
 						((AppCore)getActivity()).updatePlayer(AppCore.UPDATE_MODE.DATA);
 					}
