@@ -145,29 +145,31 @@ public class MatchFragment extends Fragment implements OnItemClickListener, AppC
 	public void onItemClick(final AdapterView<?> adapter, final View view,final int position, long id) {
 		if(getStatus()==STATUS.PLAYING) {
 			final Match match = (Match) adapter.getItemAtPosition(position);
-			new ResultSelector(view.getContext(), match).show(getGame().isThreePointMatch, new ResultSelector.OnResultListener() {
-				@Override
-				public void onSelected() {
-					adapter.getAdapter().getView(position, view, listview);
-					Game game = getGame();
-					Context context = getActivity();
-					if (game.getStatus() == STATUS.DONE) {
-						timerview.stop();
-						if (!game.make()) {
-							Toast.makeText(context, getString(R.string.message_round_create_error), Toast.LENGTH_LONG).show();
-						}else {
-							try {
-								game.save(context, null);
-							} catch (IOException e) {
-								Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
+			if(!match.isBYEGame()) {
+				new ResultSelector(view.getContext(), match).show(getGame().isThreePointMatch, new ResultSelector.OnResultListener() {
+					@Override
+					public void onSelected() {
+						adapter.getAdapter().getView(position, view, listview);
+						Game game = getGame();
+						Context context = getActivity();
+						if (game.getStatus() == STATUS.DONE) {
+							timerview.stop();
+							if (!game.make()) {
+								Toast.makeText(context, getString(R.string.message_round_create_error), Toast.LENGTH_LONG).show();
+							} else {
+								try {
+									game.save(context, null);
+								} catch (IOException e) {
+									Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
+								}
+								((AppCore) getActivity()).updatePlayer(AppCore.UPDATE_MODE.ADD);
 							}
-							((AppCore) getActivity()).updatePlayer(AppCore.UPDATE_MODE.ADD);
+						} else {
+							((AppCore) getActivity()).updatePlayer(AppCore.UPDATE_MODE.DATA);
 						}
-					} else {
-						((AppCore)getActivity()).updatePlayer(AppCore.UPDATE_MODE.DATA);
 					}
-				}
-			});
+				});
+			}
 		}
 	}
 

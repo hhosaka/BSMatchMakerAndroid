@@ -108,7 +108,8 @@ public class PlayerFragment extends Fragment implements AppCore.OnUpdatePlayersL
 		cb.setEnabled(getGame().getStatus() == Match.STATUS.MATCHING);
 		((ListView) layout.findViewById(R.id.listViewLog)).setAdapter(new ArrayAdapter<String>(view.getContext(), android.R.layout.simple_list_item_1, player.getLog()));
 		editView.setText(player.getName());
-		cb.setChecked(player.getDropped());
+		final boolean value = player.getDropped();
+		cb.setChecked(value);
 		new AlertDialog.Builder(getActivity())
 			.setIcon(android.R.drawable.ic_dialog_info)
 			.setTitle(getString(R.string.label_player))
@@ -117,7 +118,7 @@ public class PlayerFragment extends Fragment implements AppCore.OnUpdatePlayersL
 				public void onClick(DialogInterface dialog, int whichButton) {
 					player.setName(editView.getText().toString());
 					player.setDropped(cb.isChecked());
-					if(cb.isChecked()){
+					if(cb.isChecked()!=value){
 						((AppCore)getActivity()).updateMatch();
 					}
 					listview.getAdapter().getView(position, view, listview);
