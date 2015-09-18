@@ -6,6 +6,7 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Stack;
@@ -83,13 +84,21 @@ public class Game implements Serializable{
             rounds.pop();
         }
 		for(int i=0; i<MAX_TRY_COUNT; ++i){
-			Round ret = makeOne();
+			Round ret = makeOne(new Player.Comparison());
             if(ret!=null){
                 rounds.push(ret);
                 return true;
             }
 		}
-        rounds.push(new Round(rounds.size()+1));
+		for(int i=0; i<MAX_TRY_COUNT; ++i){
+			Round ret = makeOne(new Player.ComparisonWinOnly());
+			if(ret!=null){
+				rounds.push(ret);
+				return true;
+			}
+		}
+
+		rounds.push(new Round(rounds.size()+1));
         return false;
 	}
 
@@ -103,11 +112,11 @@ public class Game implements Serializable{
 		return list.toArray(new Player[list.size()]);
 	}
 
-	private Round makeOne() {
+	private Round makeOne(Comparator<Player> comp) {
 		int id = 0;
 		Round ret = new Round(rounds.size()+1);
 		Player[] temp = shufflePlayer(this.players);
-		Arrays.sort(temp, new Player.Comparison());
+		Arrays.sort(temp, comp);
 		Stack<Player> stack = new Stack<Player>();
 		for (Player player : temp) {
 			if (!player.getDropped()) {

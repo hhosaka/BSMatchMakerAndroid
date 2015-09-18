@@ -10,6 +10,14 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.nag.android.bs_match_maker.MatchFragment" >
 
+    <TextView
+        android:id="@+id/emptyTextView"
+        android:text="@string/message_round_create_error"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_weight="1"
+        android:textSize="20sp"
+        android:gravity="center"/>
     <ListView
         android:id="@+id/listViewPlayer"
         android:layout_width="match_parent"

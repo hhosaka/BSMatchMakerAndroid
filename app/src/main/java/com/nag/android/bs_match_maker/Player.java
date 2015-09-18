@@ -108,10 +108,21 @@ class Player implements Serializable{
 		}
 	}
 
+	private static int comparison_win_only(Player a, Player b) {
+		return b.getMatchPoint() - a.getMatchPoint();
+	}
+
 	public static class Comparison implements Comparator<Player> {
 		@Override
 		public int compare(Player lhs, Player rhs) {
 			return comparison(lhs, rhs);
+		}
+	}
+
+	public static class ComparisonWinOnly implements Comparator<Player> {
+		@Override
+		public int compare(Player lhs, Player rhs) {
+			return comparison_win_only(lhs, rhs);
 		}
 	}
 

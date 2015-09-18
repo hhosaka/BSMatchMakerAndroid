@@ -61,7 +61,7 @@ public class MatchFragment extends Fragment implements OnItemClickListener, AppC
 		buttonStart = (Button)getActivity().findViewById(R.id.buttonStart);
 		buttonShuffle = (Button)getActivity().findViewById(R.id.buttonShuffle);
 		listview = (ListView)rootView.findViewById(R.id.listViewPlayer);
-
+		listview.setEmptyView(rootView.findViewById(R.id.emptyTextView));
 		buttonFix.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View arg0) {
@@ -84,9 +84,7 @@ public class MatchFragment extends Fragment implements OnItemClickListener, AppC
 		buttonShuffle.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View arg0) {
-				if(!getGame().make()){
-                    Toast.makeText(getActivity(),getString(R.string.message_round_create_error),Toast.LENGTH_LONG).show();
-                }
+				getGame().make();
 				listview.setAdapter(new InternalAdapter(getActivity(), getMatches()));
 			}
 		});
@@ -103,9 +101,7 @@ public class MatchFragment extends Fragment implements OnItemClickListener, AppC
 	@Override
 	public void updateMatch() {
 		if(getStatus()==STATUS.MATCHING) {
-			if (!getGame().make()) {
-				Toast.makeText(getActivity(), getString(R.string.message_round_create_error), Toast.LENGTH_LONG).show();
-			}
+			getGame().make();
 			listview.setAdapter(new InternalAdapter(getActivity(), getMatches()));
 		}
 	}
@@ -154,16 +150,13 @@ public class MatchFragment extends Fragment implements OnItemClickListener, AppC
 						Context context = getActivity();
 						if (game.getStatus() == STATUS.DONE) {
 							timerview.stop();
-							if (!game.make()) {
-								Toast.makeText(context, getString(R.string.message_round_create_error), Toast.LENGTH_LONG).show();
-							} else {
-								try {
-									game.save(context, null);
-								} catch (IOException e) {
-									Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
-								}
-								((AppCore) getActivity()).updatePlayer(AppCore.UPDATE_MODE.ADD);
+							game.make();
+							try {
+								game.save(context, null);
+							} catch (IOException e) {
+								Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
 							}
+							((AppCore) getActivity()).updatePlayer(AppCore.UPDATE_MODE.ADD);
 						} else {
 							((AppCore) getActivity()).updatePlayer(AppCore.UPDATE_MODE.DATA);
 						}

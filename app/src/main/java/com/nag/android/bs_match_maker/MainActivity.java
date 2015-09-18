@@ -241,9 +241,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener, App
 	@Override
 	public void onCreateGame(String prefix, int num_of_player, boolean isThirdPointMatch){
 		game = new Game(Player.create(prefix, num_of_player), isThirdPointMatch);
-		if (!game.make()) {
-			Toast.makeText(this, getString(R.string.message_round_create_error), Toast.LENGTH_LONG).show();
-		}
+		game.make();
 		updatePlayer(UPDATE_MODE.CREATE);
 	}
 }
