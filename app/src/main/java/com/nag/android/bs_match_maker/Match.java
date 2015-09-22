@@ -14,6 +14,10 @@ class Match implements Serializable{
     private final int playerId[];
     private Result result = new Result();
 
+	public boolean isGapMatch() {
+		return players[PLAYER1].getMatchPoint()!=players[PLAYER2].getMatchPoint();
+	}
+
 	public enum STATUS {UNDEFINED, MATCHING, READY, PLAYING, DONE }
 
 	Match(int id, Player player1, Player player2) {

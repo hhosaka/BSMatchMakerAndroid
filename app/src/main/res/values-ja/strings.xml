@@ -23,6 +23,10 @@
     <string name="message_round_create_error">組み合わせを作れませんでした。\r\n再抽選できる可能性はあります。</string>
     <string name="url_help">"https://sites.google.com/site/hhosaka183/bs-match-maker-android/jp/help"</string>
     <string name="label_dropped">棄権</string>
+    <string name="label_player1_win">▲Win</string>
+    <string name="label_player2_win">Win▼</string>
+    <string name="label_draw">Draw</string>
+    <string name="label_gap">[▲階段]</string>
 
 
 </resources>

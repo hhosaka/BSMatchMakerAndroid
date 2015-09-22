@@ -15,6 +15,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.IOException;
@@ -169,20 +170,42 @@ public class MatchFragment extends Fragment implements OnItemClickListener, AppC
 	private class InternalAdapter extends ArrayAdapter<Match>{
 		private final LayoutInflater inflater;
 		public InternalAdapter(Context context, Match[] matches) {
-			super(context, android.R.layout.simple_list_item_1, matches);
+			super(context, 0, matches);
 			inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		}
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
+			Match match = getItem(position);
 			if(convertView==null){
-				convertView = inflater.inflate(android.R.layout.simple_list_item_1, null);
+				convertView = inflater.inflate(R.layout.fragment_match_item, null);
 			}
-			if(getItem(position).getStatus()==STATUS.DONE){
-				convertView.setBackgroundColor(Color.GREEN);
-			}else{
-				convertView.setBackgroundColor(Color.LTGRAY);
+			((TextView)convertView.findViewById(R.id.textViewPlayer1)).setText(match.getPlayers()[0].getName());
+			((TextView)convertView.findViewById(R.id.textViewPlayer2)).setText(match.getPlayers()[1].getName());
+			TextView status = (TextView)convertView.findViewById(R.id.textViewStatus);
+			switch(match.getStatus()){
+			case DONE:
+				if(match.getResult().getDiff()>0){
+					status.setText(getString(R.string.label_player1_win));
+				}else if(match.getResult().getDiff()<0){
+					status.setText(getString(R.string.label_player2_win));
+				}else{
+					status.setText(getString(R.string.label_draw));
+				}
+				status.setBackgroundColor(Color.GREEN);
+				break;
+			case MATCHING:
+			case READY:
+			case PLAYING:
+				if(match.isGapMatch()){
+					status.setText(getString(R.string.label_gap) + match.getStatus().name());
+					status.setBackgroundColor(Color.GRAY);
+				}else {
+					status.setText(match.getStatus().name());
+					status.setBackgroundColor(Color.LTGRAY);
+				}
+				break;
 			}
-			return super.getView(position, convertView, parent);
+			return convertView;
 		}
 	}
 }

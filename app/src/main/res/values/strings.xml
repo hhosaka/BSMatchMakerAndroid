@@ -23,5 +23,9 @@
     <string name="message_round_create_error">"Due to combination stagflation, app cannot generate round. you may try again"</string>
     <string name="url_help">"https://sites.google.com/site/hhosaka183/"</string>
     <string name="label_dropped">Dropped</string>
+    <string name="label_player1_win">▲Win</string>
+    <string name="label_player2_win">Win▼</string>
+    <string name="label_draw">Draw</string>
+    <string name="label_gap">[▲Gap]</string>
 
 </resources>
