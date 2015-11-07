@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">BSマッチメーカー Android</string>
+    <string name="app_name">BSマッチメーカー Premium</string>
     <string name="action_help">ヘルプ</string>
     <string name="action_initial">新規</string>
     <string name="action_open">開く</string>
+    <string name="action_import">インポート</string>
     <string name="action_save">保存</string>
     <string name="action_delete">削除</string>
     <string name="label_ok">OK</string>
@@ -27,6 +28,4 @@
     <string name="label_player2_win">Win▼</string>
     <string name="label_draw">Draw</string>
     <string name="label_gap">[▲階段]</string>
-
-
 </resources>

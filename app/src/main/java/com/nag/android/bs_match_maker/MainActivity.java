@@ -1,6 +1,8 @@
 package com.nag.android.bs_match_maker;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.StringReader;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -13,6 +15,10 @@ import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.ClipData;
+import android.content.ClipDescription;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
@@ -24,6 +30,8 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.NumberPicker;
@@ -35,18 +43,24 @@ import com.nag.android.util.PreferenceHelper;
 public class MainActivity extends Activity implements ActionBar.TabListener, AppCore, CreateGameDialog.CreateGameHandler
 {
 	private static final String ARG_GAME = "game";
+	private static final String PREF_IMPORT_LIST ="import_list";
+	private static final String PREF_DEFAULT_IS_THREE_POINT_MATCH = "default_is_three_point_match";
+	private PreferenceHelper pref;
 
 	private OnUpdatePlayersListener onupdateplayerslistener = null;
 	private OnUpdateMatchListener onUpdateMatchListener = null;
 	private SectionsPagerAdapter adapter = null;
 	private ViewPager pager = null;
 	private Game game = null;
+	private ClipboardManager clipboard;
+
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-
+		pref = PreferenceHelper.getInstance(this);
+		clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
 		if(savedInstanceState!=null){
 			game = (Game)savedInstanceState.getSerializable(ARG_GAME);
 			game.restore();
@@ -106,6 +120,9 @@ public class MainActivity extends Activity implements ActionBar.TabListener, App
 		case R.id.action_initial:
 			new CreateGameDialog().show(getFragmentManager(),"dialog");
 			return false;
+		case R.id.action_import:
+			import_list();
+			return false;
 		case R.id.action_open:
             openGame();
             return false;
@@ -137,6 +154,39 @@ public class MainActivity extends Activity implements ActionBar.TabListener, App
 				}
 			}
 		});
+	}
+
+	private void import_list()
+	{
+		LayoutInflater inflater = (LayoutInflater)this.getSystemService(LAYOUT_INFLATER_SERVICE);
+		final View editView = inflater.inflate(R.layout.layout_multiline_edit, (ViewGroup)findViewById(R.id.layout_root));
+		final EditText editlist = ((EditText)editView.findViewById(R.id.editText));
+		editlist.setText(pref.getString(PREF_IMPORT_LIST, ""));
+		((CheckBox)editView.findViewById(R.id.checkBoxIsThreePointMatch)).setChecked(pref.getBoolean(PREF_DEFAULT_IS_THREE_POINT_MATCH, false));
+
+		new AlertDialog.Builder(this)
+				.setIcon(android.R.drawable.ic_dialog_info)
+				.setTitle(R.string.action_import)
+				.setView(editView)
+				.setPositiveButton(R.string.label_ok, new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int whichButton) {
+						String list = editlist.getText().toString();
+						pref.putString(PREF_IMPORT_LIST, list);
+						boolean isThreePointMatch = ((CheckBox)editView.findViewById(R.id.checkBoxIsThreePointMatch)).isChecked();
+						try {
+							game = new Game(Player.create(new BufferedReader(new StringReader(list))), isThreePointMatch);
+							game.make();
+							updatePlayer(UPDATE_MODE.CREATE);
+						}catch(Exception e){
+							Toast.makeText(MainActivity.this,e.getMessage(), Toast.LENGTH_LONG).show();
+						}
+					}
+				})
+				.setNegativeButton(R.string.label_cancel, new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int whichButton) {
+					}
+				})
+				.show();
 	}
 
 	@Override

@@ -1,5 +1,8 @@
 package com.nag.android.bs_match_maker;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.Reader;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -160,6 +163,19 @@ class Player implements Serializable{
 			ret.add(new Player(i, prefix + String.format("%1$03d", i)));
 		}
 		return ret.toArray(new Player[ret.size()]);
+	}
+
+	public static Player[] create(BufferedReader reader) throws IOException {
+		List<Player>ret = new ArrayList<Player>();
+		int index = 0;
+		for (;;){
+			String buf = reader.readLine();
+			if(buf==null) {
+				return ret.toArray(new Player[ret.size()]);
+			}else if(buf.length()>0){
+				ret.add(new Player(++index, buf));
+			}
+		}
 	}
 
     public String[] getLog(){

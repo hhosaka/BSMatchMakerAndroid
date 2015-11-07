@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">match_maker_android</string>
+    <string name="app_name">BS Match Maker Premium</string>
     <string name="action_help">Help</string>
     <string name="action_initial">Initial</string>
+    <string name="action_import">Import</string>
     <string name="action_open">Open</string>
     <string name="action_save">Save</string>
     <string name="action_delete">Delete</string>
@@ -27,5 +28,4 @@
     <string name="label_player2_win">Win▼</string>
     <string name="label_draw">Draw</string>
     <string name="label_gap">[▲Gap]</string>
-
 </resources>
