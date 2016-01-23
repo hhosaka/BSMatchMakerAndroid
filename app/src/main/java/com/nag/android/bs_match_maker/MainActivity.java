@@ -112,6 +112,12 @@ public class MainActivity extends Activity implements ActionBar.TabListener, App
 		return true;
 	}
 
+	@Override
+	public boolean onMenuOpened(int featureId, Menu menu) {
+		menu.findItem(R.id.action_add).setEnabled(game.getRounds().size()==1);
+		return super.onMenuOpened(featureId, menu);
+	}
+
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()){
 		case R.id.action_help:
@@ -122,6 +128,9 @@ public class MainActivity extends Activity implements ActionBar.TabListener, App
 			return false;
 		case R.id.action_import:
 			import_list();
+			return false;
+		case R.id.action_add:
+			addPlayer();
 			return false;
 		case R.id.action_open:
             openGame();
@@ -294,4 +303,10 @@ public class MainActivity extends Activity implements ActionBar.TabListener, App
 		game.make();
 		updatePlayer(UPDATE_MODE.CREATE);
 	}
+
+	private void addPlayer(){
+		game.addPlayer("new comer");
+		updatePlayer(UPDATE_MODE.DATA);
+	}
+
 }

@@ -8,6 +8,7 @@
     <string name="action_open">Open</string>
     <string name="action_save">Save</string>
     <string name="action_delete">Delete</string>
+    <string name="action_add">Add</string>
     <string name="label_ok">OK</string>
     <string name="label_delete_all">Delete All</string>
     <string name="label_delete">Delete</string>
@@ -22,7 +23,7 @@
     <string name="label_player_prefix">Player Prefix</string>
     <string name="label_player_prefix_default">Player</string>
     <string name="message_round_create_error">"Due to combination stagflation, app cannot generate round. you may try again"</string>
-    <string name="url_help">"https://sites.google.com/site/hhosaka183/"</string>
+    <string name="url_help">"https://sites.google.com/site/hhosaka183/bs-match-maker-android/en/help"</string>
     <string name="label_dropped">Dropped</string>
     <string name="label_player1_win">▲Win</string>
     <string name="label_player2_win">Win▼</string>

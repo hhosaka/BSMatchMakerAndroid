@@ -78,7 +78,7 @@ public class MatchFragment extends Fragment implements OnItemClickListener, AppC
 		buttonStart.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View arg0) {
-				timerview.start(getGame().start());
+				timerview.start(getGame().start(getActivity()));
 				setUIByStatus();
 			}
 		});

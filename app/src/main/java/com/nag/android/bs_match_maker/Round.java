@@ -2,6 +2,7 @@ package com.nag.android.bs_match_maker;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class Round implements Serializable{
@@ -75,6 +76,15 @@ public class Round implements Serializable{
 
 	public void add(Match match){
 		matches.add(match);
+	}
+	public void add(Player player, int fullpoint){
+		Match m = matches.get(matches.size()-1);
+		if(m.isBYEGame()){
+			matches.remove(matches.size()-1);
+			add(new Match(matches.size() - 1, m.getPlayers()[0], player));
+		}else {
+			add(new Match(matches.size(), player, fullpoint));
+		}
 	}
 
 	public void bind() {

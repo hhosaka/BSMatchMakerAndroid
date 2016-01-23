@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
@@ -12,6 +13,7 @@ import java.util.List;
 import java.util.Stack;
 
 import android.content.Context;
+import android.widget.Toast;
 
 public class Game implements Serializable{
 	interface GameHolder{
@@ -102,8 +104,15 @@ public class Game implements Serializable{
         return false;
 	}
 
-	public long start(){
-		return getLatestRound().start();
+	public long start(Context context)
+	{
+		long ret = getLatestRound().start();
+		try{
+			save(context, null);
+		}catch(Exception e){
+			Toast.makeText(context, "I/O error", Toast.LENGTH_LONG);
+		}
+		return ret;
 	}
 
 	private static Player[] shufflePlayer(Player[]players){
@@ -155,5 +164,20 @@ public class Game implements Serializable{
 		for(Round round : rounds) {
 			round.restore(players);
 		}
+	}
+	private static Player[] addPlayer(Player[] players, Player player){
+		List<Player>temp = new ArrayList<Player>();
+		temp.addAll(Arrays.asList(players));
+		temp.add(player);
+		return temp.toArray(new Player[0]);
+	}
+
+	public boolean addPlayer(String name){
+		if(rounds.size()==1) {
+			Player p = new Player(players.length, name);
+			players = addPlayer(players,p);
+			rounds.peek().add(p, isThreePointMatch?2:1);
+		}
+		return false;
 	}
 }
