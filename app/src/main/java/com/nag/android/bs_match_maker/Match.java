@@ -31,6 +31,14 @@ class Match implements Serializable{
 		status = STATUS.MATCHING;
 	}
 
+	public void add(Player player){
+		assert(players[PLAYER2]==BYE);
+		players[PLAYER2] = player;
+		this.playerId[PLAYER2]=player.id;
+		result = new Result();
+		status = STATUS.MATCHING;
+	}
+
 	Match(int id, Player player, int fullpoint){
 		this(id,player,BYE);
 		update(new Result(fullpoint,0));

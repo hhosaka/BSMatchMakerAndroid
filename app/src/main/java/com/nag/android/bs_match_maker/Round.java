@@ -80,8 +80,7 @@ public class Round implements Serializable{
 	public void add(Player player, int fullpoint){
 		Match m = matches.get(matches.size()-1);
 		if(m.isBYEGame()){
-			matches.remove(matches.size()-1);
-			add(new Match(matches.size() - 1, m.getPlayers()[0], player));
+			m.add(player);
 		}else {
 			add(new Match(matches.size(), player, fullpoint));
 		}

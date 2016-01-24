@@ -305,8 +305,25 @@ public class MainActivity extends Activity implements ActionBar.TabListener, App
 	}
 
 	private void addPlayer(){
-		game.addPlayer("new comer");
-		updatePlayer(UPDATE_MODE.DATA);
+		final EditText edittext = new EditText(this);
+		edittext.setText(getString(R.string.label_player_new_comer));
+		new AlertDialog.Builder(this)
+				.setIcon(android.R.drawable.ic_dialog_info)
+				.setTitle(getString(R.string.action_add))
+				.setView(edittext)
+				.setPositiveButton(getString(R.string.label_ok), new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int whichButton) {
+						String name = edittext.getText().toString();
+						if (!name.isEmpty()) {
+							game.addPlayer(name);
+							updateMatch();
+							updatePlayer(UPDATE_MODE.DATA);
+						}
+					}
+				})
+				.setNegativeButton(getString(R.string.label_cancel), null)
+				.show();
+
 	}
 
 }

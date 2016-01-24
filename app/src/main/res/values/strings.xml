@@ -22,6 +22,7 @@
     <string name="label_number_of_player">Number of Player</string>
     <string name="label_player_prefix">Player Prefix</string>
     <string name="label_player_prefix_default">Player</string>
+    <string name="label_player_new_comer">New Comer</string>
     <string name="message_round_create_error">"Due to combination stagflation, app cannot generate round. you may try again"</string>
     <string name="url_help">"https://sites.google.com/site/hhosaka183/bs-match-maker-android/en/help"</string>
     <string name="label_dropped">Dropped</string>

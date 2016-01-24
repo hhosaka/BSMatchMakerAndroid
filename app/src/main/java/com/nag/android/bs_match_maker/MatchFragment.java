@@ -2,6 +2,7 @@ package com.nag.android.bs_match_maker;
 
 import com.nag.android.bs_match_maker.Match.STATUS;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.graphics.Color;
@@ -39,6 +40,13 @@ public class MatchFragment extends Fragment implements OnItemClickListener, AppC
 	}
 
 	public MatchFragment() {
+
+	}
+
+	@Override
+	public void onAttach(Activity activity){
+		super.onAttach(activity);
+		((AppCore)getActivity()).setOnUpdateMatchListener(this);
 	}
 
 	private AppCore getAppCore(){
@@ -103,8 +111,8 @@ public class MatchFragment extends Fragment implements OnItemClickListener, AppC
 	public void updateMatch() {
 		if(getStatus()==STATUS.MATCHING) {
 			getGame().make();
-			listview.setAdapter(new InternalAdapter(getActivity(), getMatches()));
 		}
+		listview.setAdapter(new InternalAdapter(getActivity(), getMatches()));
 	}
 
 	private void setUIByStatus(){
