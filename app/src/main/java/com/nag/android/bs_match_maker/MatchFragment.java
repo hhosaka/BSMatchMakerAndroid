@@ -103,8 +103,8 @@ public class MatchFragment extends Fragment implements OnItemClickListener, AppC
 	public void updateMatch() {
 		if(getStatus()==STATUS.MATCHING) {
 			getGame().make();
-			listview.setAdapter(new InternalAdapter(getActivity(), getMatches()));
 		}
+		listview.setAdapter(new InternalAdapter(getActivity(), getMatches()));
 	}
 
 	private void setUIByStatus(){

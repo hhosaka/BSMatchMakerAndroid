@@ -131,6 +131,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener, App
 			return false;
 		case R.id.action_add:
 			addPlayer();
+			updateMatch();
 			return false;
 		case R.id.action_open:
             openGame();
