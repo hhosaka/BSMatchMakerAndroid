@@ -22,14 +22,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f3dcf0b6-a7fc-4566-8a40-29862c43ad02" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/image/banner.png" />
+      <change type="DELETED" beforePath="C:\workspace\BSMatchMakerAndroid\.idea\libraries\android_support_v13.xml" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/nag/android/bs_match_maker/MainActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/nag/android/bs_match_maker/MainActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/nag/android/bs_match_maker/Match.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/nag/android/bs_match_maker/Match.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/nag/android/bs_match_maker/MatchFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/nag/android/bs_match_maker/MatchFragment.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/nag/android/bs_match_maker/Round.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/nag/android/bs_match_maker/Round.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" afterPath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/values-ja/strings.xml" afterPath="$PROJECT_DIR$/app/src/main/res/values-ja/strings.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="BSMatchMakerAndroid.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -85,7 +79,7 @@
       <file leaf-file-name="PlayerFragment.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/nag/android/bs_match_maker/PlayerFragment.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1921">
+            <state vertical-scroll-proportion="0.0" vertical-offset="306" max-vertical-offset="2312">
               <caret line="18" column="0" selection-start-line="18" selection-start-column="0" selection-end-line="18" selection-end-column="0" />
               <folding />
             </state>
@@ -95,26 +89,9 @@
       <file leaf-file-name="MainActivity.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/nag/android/bs_match_maker/MainActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.2972973" vertical-offset="4033" max-vertical-offset="4845">
-              <caret line="295" column="12" selection-start-line="295" selection-start-column="12" selection-end-line="295" selection-end-column="12" />
-              <folding>
-                <element signature="e#4110#4153#0" expanded="true" />
-                <element signature="e#4849#4882#0" expanded="true" />
-                <element signature="e#5015#5046#0" expanded="true" />
-                <element signature="e#6024#6046#0" expanded="true" />
-                <element signature="e#6094#6111#0" expanded="true" />
-                <element signature="e#6761#6782#0" expanded="true" />
-                <element signature="e#7811#7843#0" expanded="true" />
-                <element signature="e#7866#7897#0" expanded="true" />
-                <element signature="e#8108#8109#0" expanded="true" />
-                <element signature="e#8126#8127#0" expanded="true" />
-                <element signature="e#9658#9700#0" expanded="true" />
-                <element signature="e#9797#9827#0" expanded="true" />
-                <element signature="e#9875#9903#0" expanded="true" />
-                <element signature="e#9905#10203#0" expanded="true" />
-                <element signature="e#10196#10197#0" expanded="true" />
-                <element signature="e#10228#10260#0" expanded="true" />
-              </folding>
+            <state vertical-scroll-proportion="0.25" vertical-offset="4088" max-vertical-offset="4794">
+              <caret line="299" column="0" selection-start-line="299" selection-start-column="0" selection-end-line="299" selection-end-column="0" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -122,7 +99,7 @@
       <file leaf-file-name="Match.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/nag/android/bs_match_maker/Match.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="323" max-vertical-offset="2703">
+            <state vertical-scroll-proportion="0.0" vertical-offset="510" max-vertical-offset="2941">
               <caret line="30" column="16" selection-start-line="30" selection-start-column="16" selection-end-line="30" selection-end-column="16" />
               <folding />
             </state>
@@ -132,7 +109,7 @@
       <file leaf-file-name="strings.xml" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/res/values-ja/strings.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-10.2" vertical-offset="153" max-vertical-offset="663">
+            <state vertical-scroll-proportion="0.0" vertical-offset="153" max-vertical-offset="663">
               <caret line="24" column="58" selection-start-line="24" selection-start-column="58" selection-end-line="24" selection-end-column="58" />
               <folding />
             </state>
@@ -152,7 +129,7 @@
       <file leaf-file-name="Round.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/nag/android/bs_match_maker/Round.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="1020" max-vertical-offset="1802">
+            <state vertical-scroll-proportion="0.0" vertical-offset="1394" max-vertical-offset="1989">
               <caret line="82" column="0" selection-start-line="82" selection-start-column="0" selection-end-line="82" selection-end-column="0" />
               <folding />
             </state>
@@ -162,7 +139,7 @@
       <file leaf-file-name="Player.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/nag/android/bs_match_maker/Player.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="1353" max-vertical-offset="3009">
+            <state vertical-scroll-proportion="0.0" vertical-offset="1683" max-vertical-offset="3298">
               <caret line="99" column="0" selection-start-line="99" selection-start-column="0" selection-end-line="99" selection-end-column="0" />
               <folding />
             </state>
@@ -172,18 +149,9 @@
       <file leaf-file-name="MatchFragment.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/nag/android/bs_match_maker/MatchFragment.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="1347" max-vertical-offset="3298">
+            <state vertical-scroll-proportion="0.0" vertical-offset="1955" max-vertical-offset="3825">
               <caret line="115" column="0" selection-start-line="115" selection-start-column="0" selection-end-line="115" selection-end-column="0" />
-              <folding>
-                <element signature="e#1422#1423#0" expanded="true" />
-                <element signature="e#1458#1459#0" expanded="true" />
-                <element signature="e#1484#1485#0" expanded="true" />
-                <element signature="e#1520#1521#0" expanded="true" />
-                <element signature="e#6476#6513#0" expanded="true" />
-                <element signature="e#6581#6618#0" expanded="true" />
-                <element signature="e#6652#6682#0" expanded="true" />
-                <element signature="e#6844#6873#0" expanded="true" />
-              </folding>
+              <folding />
             </state>
           </provider>
         </entry>
@@ -191,7 +159,7 @@
       <file leaf-file-name="Fragment.class" pinned="false" current="false" current-in-tab="false">
         <entry file="jar://$USER_HOME$/AppData/Local/Android/sdk/platforms/android-20/android.jar!/android/app/Fragment.class">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="450" max-vertical-offset="2975">
+            <state vertical-scroll-proportion="0.0" vertical-offset="595" max-vertical-offset="2992">
               <caret line="35" column="38" selection-start-line="35" selection-start-column="38" selection-end-line="35" selection-end-column="38" />
               <folding />
             </state>
@@ -201,7 +169,7 @@
       <file leaf-file-name="Game.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/nag/android/bs_match_maker/Game.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="2924">
+            <state vertical-scroll-proportion="0.0" vertical-offset="374" max-vertical-offset="3213">
               <caret line="22" column="0" selection-start-line="22" selection-start-column="0" selection-end-line="22" selection-end-column="0" />
               <folding />
             </state>
@@ -1450,8 +1418,8 @@
     </navigator>
     <panes>
       <pane id="Scope" />
-      <pane id="ProjectPane" />
       <pane id="PackagesPane" />
+      <pane id="ProjectPane" />
       <pane id="AndroidView">
         <subPane>
           <PATH>
@@ -2141,7 +2109,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/res/values-ja/strings.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-10.2" vertical-offset="153" max-vertical-offset="663">
+        <state vertical-scroll-proportion="0.0" vertical-offset="153" max-vertical-offset="663">
           <caret line="24" column="58" selection-start-line="24" selection-start-column="58" selection-end-line="24" selection-end-column="58" />
           <folding />
         </state>
@@ -2175,16 +2143,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="1347" max-vertical-offset="3298">
           <caret line="115" column="0" selection-start-line="115" selection-start-column="0" selection-end-line="115" selection-end-column="0" />
-          <folding>
-            <element signature="e#1422#1423#0" expanded="true" />
-            <element signature="e#1458#1459#0" expanded="true" />
-            <element signature="e#1484#1485#0" expanded="true" />
-            <element signature="e#1520#1521#0" expanded="true" />
-            <element signature="e#6476#6513#0" expanded="true" />
-            <element signature="e#6581#6618#0" expanded="true" />
-            <element signature="e#6652#6682#0" expanded="true" />
-            <element signature="e#6844#6873#0" expanded="true" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -2222,26 +2181,9 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/nag/android/bs_match_maker/MainActivity.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.2972973" vertical-offset="4033" max-vertical-offset="4845">
-          <caret line="295" column="12" selection-start-line="295" selection-start-column="12" selection-end-line="295" selection-end-column="12" />
-          <folding>
-            <element signature="e#4110#4153#0" expanded="true" />
-            <element signature="e#4849#4882#0" expanded="true" />
-            <element signature="e#5015#5046#0" expanded="true" />
-            <element signature="e#6024#6046#0" expanded="true" />
-            <element signature="e#6094#6111#0" expanded="true" />
-            <element signature="e#6761#6782#0" expanded="true" />
-            <element signature="e#7811#7843#0" expanded="true" />
-            <element signature="e#7866#7897#0" expanded="true" />
-            <element signature="e#8108#8109#0" expanded="true" />
-            <element signature="e#8126#8127#0" expanded="true" />
-            <element signature="e#9658#9700#0" expanded="true" />
-            <element signature="e#9797#9827#0" expanded="true" />
-            <element signature="e#9875#9903#0" expanded="true" />
-            <element signature="e#9905#10203#0" expanded="true" />
-            <element signature="e#10196#10197#0" expanded="true" />
-            <element signature="e#10228#10260#0" expanded="true" />
-          </folding>
+        <state vertical-scroll-proportion="0.25" vertical-offset="4088" max-vertical-offset="4794">
+          <caret line="299" column="0" selection-start-line="299" selection-start-column="0" selection-end-line="299" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
