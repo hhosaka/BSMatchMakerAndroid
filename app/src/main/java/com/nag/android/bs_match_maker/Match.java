@@ -31,12 +31,13 @@ class Match implements Serializable{
 		status = STATUS.MATCHING;
 	}
 
-	public void add(Player player){
+	public void add(Player player, STATUS newStatus){
 		assert(players[PLAYER2]==BYE);
 		players[PLAYER2] = player;
 		this.playerId[PLAYER2]=player.id;
 		result = new Result();
-		status = STATUS.MATCHING;
+		player.Bind(this);
+		status = newStatus;
 	}
 
 	Match(int id, Player player, int fullpoint){
@@ -104,11 +105,11 @@ class Match implements Serializable{
 		return this.result.getPoint(OpponentIndex(player));
 	}
 
-	void bind() {
+	void bind(STATUS newStatus) {
 		for (Player player : players) {
 			player.Bind(this);
 		}
-		status = isBYEGame()?STATUS.DONE:STATUS.READY;
+		status = isBYEGame()?STATUS.DONE : newStatus;
 	}
 
 	public void start(){

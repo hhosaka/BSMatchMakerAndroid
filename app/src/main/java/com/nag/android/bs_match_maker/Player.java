@@ -160,8 +160,8 @@ class Player implements Serializable{
 	public static Player[] create(String prefix, int count){
 		List<Player>ret = new ArrayList<Player>();
 		for (int i = 0; i < count; ++i) {
-			ret.add(new Player(i, prefix + String.format("%1$03d", i)));
-		}
+			ret.add(new Player(i, prefix + String.format("%1$03d", i+1)));
+	}
 		return ret.toArray(new Player[ret.size()]);
 	}
 

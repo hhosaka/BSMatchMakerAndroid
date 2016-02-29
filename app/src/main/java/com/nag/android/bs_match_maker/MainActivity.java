@@ -64,9 +64,6 @@ public class MainActivity extends Activity implements ActionBar.TabListener, App
 		if(savedInstanceState!=null){
 			game = (Game)savedInstanceState.getSerializable(ARG_GAME);
 			game.restore();
-			if(game.getStatus()== Match.STATUS.PLAYING){
-				((TimerView)findViewById(R.id.TimerTextTimer)).start(game.getStartTime());
-			}
 		}else{
             try {
                 game = Game.load(this);
@@ -75,6 +72,9 @@ public class MainActivity extends Activity implements ActionBar.TabListener, App
                 game = new Game();
             }
         }
+		if(game.getStatus()== Match.STATUS.PLAYING){
+			((TimerView)findViewById(R.id.TimerTextTimer)).start(game.getStartTime());
+		}
 		getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
 		pager = (ViewPager) findViewById(R.id.pager);
@@ -114,7 +114,11 @@ public class MainActivity extends Activity implements ActionBar.TabListener, App
 
 	@Override
 	public boolean onMenuOpened(int featureId, Menu menu) {
+		menu.findItem(R.id.action_initial).setVisible(pager.getCurrentItem()==0);
+		menu.findItem(R.id.action_open).setVisible(pager.getCurrentItem()==0);
+		menu.findItem(R.id.action_add).setVisible(pager.getCurrentItem()==0);
 		menu.findItem(R.id.action_add).setEnabled(game.getRounds().size()==1);
+		menu.findItem(R.id.action_import).setVisible(pager.getCurrentItem()==0);
 		return super.onMenuOpened(featureId, menu);
 	}
 
