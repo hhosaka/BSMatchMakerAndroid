@@ -26,6 +26,7 @@ import android.net.Uri;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -312,6 +313,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener, App
 	private void addPlayer(){
 		final EditText edittext = new EditText(this);
 		edittext.setText(getString(R.string.label_player_new_comer));
+		edittext.setInputType(InputType.TYPE_CLASS_TEXT);
 		new AlertDialog.Builder(this)
 				.setIcon(android.R.drawable.ic_dialog_info)
 				.setTitle(getString(R.string.action_add))

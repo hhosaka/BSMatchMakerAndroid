@@ -6,6 +6,7 @@ import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -108,6 +109,7 @@ public class PlayerFragment extends Fragment implements AppCore.OnUpdatePlayersL
 		cb.setEnabled(getGame().getStatus() == Match.STATUS.MATCHING);
 		((ListView) layout.findViewById(R.id.listViewLog)).setAdapter(new ArrayAdapter<String>(view.getContext(), android.R.layout.simple_list_item_1, player.getLog()));
 		editView.setText(player.getName());
+		editView.setInputType(InputType.TYPE_CLASS_TEXT);
 		final boolean value = player.getDropped();
 		cb.setChecked(value);
 		new AlertDialog.Builder(getActivity())

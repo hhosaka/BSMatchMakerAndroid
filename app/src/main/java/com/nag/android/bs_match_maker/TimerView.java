@@ -44,7 +44,9 @@ public class TimerView extends TextView {
 			
 	}
 	public void stop(){
-		timer.cancel();
-		timer = null;
+		if(timer!=null) {
+			timer.cancel();
+			timer = null;
+		}
 	}
 }

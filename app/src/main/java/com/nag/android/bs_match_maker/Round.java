@@ -82,9 +82,9 @@ public class Round implements Serializable{
 		if(m.isBYEGame()){
 			m.add(player, matches.get(0).getStatus());
 		}else {
-			m = new Match(matches.size(), player, fullpoint);
-			add(m);
-			player.Bind(m);
+			Match new_m = new Match(matches.size(), player, fullpoint);
+			add(new_m);
+			if(m.getStatus()== Match.STATUS.PLAYING||m.getStatus()== Match.STATUS.READY){player.Bind(new_m);}
 
 		}
 	}

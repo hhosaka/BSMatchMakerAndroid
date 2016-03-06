@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.CheckBox;
@@ -43,6 +44,7 @@ public class CreateGameDialog extends DialogFragment {
 		cb.setChecked(PreferenceHelper.getInstance(getActivity()).getBoolean(PREF_DEFAULT_IS_THREE_POINT_MATCH, false));
 		prefix = (EditText)view.findViewById(R.id.editTextPlayerPrefix);
 		prefix.setText(PreferenceHelper.getInstance(getActivity()).getString(PREF_PLAYER_PREFIX,getString(R.string.label_player_prefix_default)));
+		prefix.setInputType(InputType.TYPE_CLASS_TEXT);
 		return new AlertDialog.Builder(getActivity())
 				.setTitle(getString(R.string.action_initial))
 				.setView(view)

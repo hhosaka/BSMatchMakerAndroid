@@ -36,7 +36,7 @@ class Match implements Serializable{
 		players[PLAYER2] = player;
 		this.playerId[PLAYER2]=player.id;
 		result = new Result();
-		player.Bind(this);
+		if(newStatus==STATUS.PLAYING||newStatus==STATUS.READY)player.Bind(this);
 		status = newStatus;
 	}
 

@@ -119,6 +119,7 @@ public class MatchFragment extends Fragment implements OnItemClickListener, AppC
 		switch(getGame().getLatestRound().getStatus()){
         case UNDEFINED:
 		case MATCHING:
+			timerview.stop();
 			timerview.setVisibility(View.GONE);
 			buttonFix.setEnabled(true);
             buttonFix.setVisibility(View.VISIBLE);
@@ -128,6 +129,7 @@ public class MatchFragment extends Fragment implements OnItemClickListener, AppC
 			buttonShuffle.setVisibility(View.VISIBLE);
 			break;
 		case READY:
+			timerview.stop();
 			timerview.setVisibility(View.GONE);
             buttonFix.setVisibility(View.VISIBLE);
 			buttonFix.setEnabled(false);
