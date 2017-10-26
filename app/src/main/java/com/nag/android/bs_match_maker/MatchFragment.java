@@ -162,14 +162,14 @@ public class MatchFragment extends Fragment implements OnItemClickListener, AppC
 						if (game.getStatus() == STATUS.DONE) {
 							timerview.stop();
 							game.make();
-							try {
-								game.save(context, null);
-							} catch (IOException e) {
-								Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
-							}
 							((AppCore) getActivity()).updatePlayer(AppCore.UPDATE_MODE.ADD);
 						} else {
 							((AppCore) getActivity()).updatePlayer(AppCore.UPDATE_MODE.DATA);
+						}
+						try {
+							game.save(context, null);
+						} catch (IOException e) {
+							Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
 						}
 					}
 				});
