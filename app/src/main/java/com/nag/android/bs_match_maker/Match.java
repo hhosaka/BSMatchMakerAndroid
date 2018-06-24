@@ -13,9 +13,15 @@ class Match implements Serializable{
     private transient Player[] players;
     private final int playerId[];
     private Result result = new Result();
+	private boolean isGap;
+
+	public static boolean isGapMatch(Player p1, Player p2)
+	{
+		return p1.getMatchPoint()!=p2.getMatchPoint();
+	}
 
 	public boolean isGapMatch() {
-		return players[PLAYER1].getMatchPoint()!=players[PLAYER2].getMatchPoint();
+		return isGap;
 	}
 
 	public enum STATUS {UNDEFINED, MATCHING, READY, PLAYING, DONE }
@@ -29,6 +35,7 @@ class Match implements Serializable{
 		this.players[PLAYER2] = player2;
         this.playerId[PLAYER2]=player2.id;
 		status = STATUS.MATCHING;
+		isGap = players[PLAYER1].getMatchPoint()!=players[PLAYER2].getMatchPoint();
 	}
 
 	public void add(Player player, STATUS newStatus){
@@ -98,7 +105,7 @@ class Match implements Serializable{
     }
 
     public String getLogString(Player player){
-        return getResultMark(player) + "-"+getOpponent(player).getName();
+        return getResultMark(player) + "-"+getOpponent(player).getName()+(isGapMatch()?"[Gap]":"");
     }
 
 	private int getOpponentPoint(Player player) {

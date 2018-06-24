@@ -191,6 +191,8 @@ public class MatchFragment extends Fragment implements OnItemClickListener, AppC
 			}
 			((TextView)convertView.findViewById(R.id.textViewPlayer1)).setText(match.getPlayers()[0].getName());
 			((TextView)convertView.findViewById(R.id.textViewPlayer2)).setText(match.getPlayers()[1].getName());
+			((TextView)convertView.findViewById(R.id.textViewID1)).setText(String.valueOf(position+1));
+			((TextView)convertView.findViewById(R.id.textViewID2)).setText(String.valueOf(position+1));
 			TextView status = (TextView)convertView.findViewById(R.id.textViewStatus);
 			switch(match.getStatus()){
 			case DONE:

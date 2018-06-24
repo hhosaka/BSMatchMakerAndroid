@@ -115,12 +115,15 @@ public class MainActivity extends Activity implements ActionBar.TabListener, App
 
 	@Override
 	public boolean onMenuOpened(int featureId, Menu menu) {
-		menu.findItem(R.id.action_initial).setVisible(pager.getCurrentItem()==0);
-		menu.findItem(R.id.action_open).setVisible(pager.getCurrentItem()==0);
-		menu.findItem(R.id.action_add).setVisible(pager.getCurrentItem()==0);
-		menu.findItem(R.id.action_add).setEnabled(game.getRounds().size()==1);
-		menu.findItem(R.id.action_import).setVisible(pager.getCurrentItem()==0);
-		return super.onMenuOpened(featureId, menu);
+		boolean ret = super.onMenuOpened(featureId, menu);
+		if(menu!=null) {
+			menu.findItem(R.id.action_initial).setVisible(pager.getCurrentItem() == 0);
+			menu.findItem(R.id.action_open).setVisible(pager.getCurrentItem() == 0);
+			menu.findItem(R.id.action_add).setVisible(pager.getCurrentItem() == 0);
+			menu.findItem(R.id.action_add).setEnabled(game.getRounds().size() == 1);
+			menu.findItem(R.id.action_import).setVisible(pager.getCurrentItem() == 0);
+		}
+		return ret;
 	}
 
 	public boolean onOptionsItemSelected(MenuItem item) {
@@ -137,6 +140,9 @@ public class MainActivity extends Activity implements ActionBar.TabListener, App
 		case R.id.action_add:
 			addPlayer();
 			updateMatch();
+			return false;
+		case R.id.action_export:
+			Export.Execute(this, game.getPlayers());
 			return false;
 		case R.id.action_open:
             openGame();

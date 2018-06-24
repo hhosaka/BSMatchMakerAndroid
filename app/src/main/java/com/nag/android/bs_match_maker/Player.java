@@ -97,6 +97,20 @@ class Player implements Serializable{
 		return false;
 	}
 
+	int getDirectResult(Player opponent) {
+		for (Match match : matches) {
+			if(match.getPlayers()[0].getId()==opponent.getId())
+			{
+				return -match.getResult().getDiff();
+			}
+			else if(match.getPlayers()[1].getId()==opponent.getId())
+			{
+				return match.getResult().getDiff();
+			}
+		}
+		return 0;
+	}
+
 	private static int comparison(Player a, Player b) {
 		int ret;
 		float fret;
@@ -107,7 +121,7 @@ class Player implements Serializable{
 		} else if ((ret = b.getWinPoint() - a.getWinPoint()) != 0) {
 			return ret;
 		} else {
-			return 0;
+			return a.getDirectResult(b);
 		}
 	}
 
@@ -185,4 +199,34 @@ class Player implements Serializable{
         }
         return buf.toArray(new String[buf.size()]);
     }
+
+	public boolean hasGapMatch()
+	{
+		for(Match match : matches){
+			if(match.isGapMatch()){return true;}
+		}
+		return false;
+	}
+
+	public boolean byeAcceptable()
+	{
+		if(matches.size()==0){
+			return true;
+		}
+		else{
+			for(Match match : matches){
+				if(match.getWinPoint(this)>0){return false;}
+			}
+			return true;
+		}
+	}
+	public boolean hasBye()
+	{
+		for(Match m : matches){
+			if(m.isBYEGame()){
+				return true;
+			}
+		}
+		return false;
+	}
 }

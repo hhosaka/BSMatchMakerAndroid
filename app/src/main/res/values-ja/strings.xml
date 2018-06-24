@@ -9,6 +9,7 @@
     <string name="action_save">保存</string>
     <string name="action_delete">削除</string>
     <string name="action_add">プレイヤー追加</string>
+    <string name="action_export">結果出力</string>
     <string name="label_ok">OK</string>
     <string name="label_cancel">キャンセル</string>
     <string name="label_delete_all">全削除</string>

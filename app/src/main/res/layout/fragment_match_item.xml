@@ -12,14 +12,38 @@
         android:text="Palyer1"
         android:id="@+id/textViewPlayer1"/>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="Playing"
-        android:id="@+id/textViewStatus"
-        android:gravity="right"
-        android:layout_gravity="center_horizontal"/>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="@android:style/TextAppearance.Holo.Large"
+            android:text="999"
+            android:id="@+id/textViewID1"
+            android:layout_weight="10"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="@android:style/TextAppearance.Holo.Large"
+            android:text="Playing"
+            android:id="@+id/textViewStatus"
+            android:gravity="center_horizontal"
+            android:layout_gravity="center_horizontal"
+            android:layout_weight="80"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:id="@+id/textViewID2"
+            android:layout_weight="10"
+            android:text="999"
+            android:visibility="invisible"/>
+    </LinearLayout>
 
     <TextView
         android:layout_width="match_parent"

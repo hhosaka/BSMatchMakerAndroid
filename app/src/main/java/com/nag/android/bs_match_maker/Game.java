@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Stack;
 
@@ -68,32 +67,45 @@ public class Game implements Serializable{
 		return game;
 	}
 
-	private static Player confirm(Stack<Player> players, Player target) {
+	private static boolean hasIrregularMatch(Player p1, Player p2)
+	{
+		if(Match.isGapMatch(p1, p2))
+		{
+			return p1.hasGapMatch() || p2.hasGapMatch() || p1.hasBye() || p2.hasBye();
+		}
+		return false;
+	}
+
+	private static Player confirm(Stack<Player> players, Player target, boolean force) {
 		for(Player player: players){
 			if(!player.hasMatched(target)){
-				players.remove(player);
-				return player;
+				if(force || !hasIrregularMatch(player, target)){
+					if(force || !target.hasBye()) {
+						players.remove(player);
+						return player;
+					}
+				}
 			}
 		}
 		return null;
 	}
 
 	public boolean make() {
-		final int MAX_TRY_COUNT = 10;
+		final int MAX_TRY_COUNT = 50;
 
         if (rounds.size()>0 && getLatestRound().getStatus() == Match.STATUS.MATCHING
                 || rounds.size()>0 && getLatestRound().getStatus() == Match.STATUS.UNDEFINED) {
             rounds.pop();
         }
 		for(int i=0; i<MAX_TRY_COUNT; ++i){
-			Round ret = makeOne(new Player.Comparison());
+			Round ret = makeOne(new Player.Comparison(), false);
             if(ret!=null){
                 rounds.push(ret);
                 return true;
             }
 		}
 		for(int i=0; i<MAX_TRY_COUNT; ++i){
-			Round ret = makeOne(new Player.ComparisonWinOnly());
+			Round ret = makeOne(new Player.ComparisonWinOnly(), true);
 			if(ret!=null){
 				rounds.push(ret);
 				return true;
@@ -121,7 +133,7 @@ public class Game implements Serializable{
 		return list.toArray(new Player[list.size()]);
 	}
 
-	private Round makeOne(Comparator<Player> comp) {
+	private Round makeOne(Comparator<Player> comp, boolean force) {
 		int id = 0;
 		Round ret = new Round(rounds.size()+1);
 		Player[] temp = shufflePlayer(this.players);
@@ -132,7 +144,7 @@ public class Game implements Serializable{
 				if (stack.size() == 0) {
 					stack.push(player);
 				} else {
-					Player p = confirm(stack, player);
+					Player p = confirm(stack, player, force);
 					if (p != null) {
 						Match m = new Match(++id, p, player);
 						ret.add(m);
@@ -146,7 +158,13 @@ public class Game implements Serializable{
             return null;
         }
 		if (stack.size() > 0) {
-			ret.add(new Match(++id, stack.pop(),isThreePointMatch?2:1));
+			Player p = stack.pop();
+			if(p.byeAcceptable()){
+				ret.add(new Match(++id, p,isThreePointMatch?2:1));
+			}
+			else{
+				return null;
+			}
 		}
         return ret;
 	}
