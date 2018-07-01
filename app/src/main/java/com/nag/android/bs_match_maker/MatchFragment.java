@@ -29,6 +29,7 @@ public class MatchFragment extends Fragment implements OnItemClickListener, AppC
 	private Button buttonFix = null;
 	private Button buttonStart = null;
 	private Button buttonShuffle = null;
+	private Button buttonMakeMatch = null;
 	private TimerView timerview = null;
 
 	static Fragment newInstance(int round) {
@@ -69,6 +70,7 @@ public class MatchFragment extends Fragment implements OnItemClickListener, AppC
 		buttonFix = (Button)getActivity().findViewById(R.id.buttonFix);
 		buttonStart = (Button)getActivity().findViewById(R.id.buttonStart);
 		buttonShuffle = (Button)getActivity().findViewById(R.id.buttonShuffle);
+		buttonMakeMatch = (Button)getActivity().findViewById(R.id.buttonMakeMatch);
 		listview = (ListView)rootView.findViewById(R.id.listViewPlayer);
 		listview.setEmptyView(rootView.findViewById(R.id.emptyTextView));
 		buttonFix.setOnClickListener(new OnClickListener(){
@@ -95,6 +97,13 @@ public class MatchFragment extends Fragment implements OnItemClickListener, AppC
 			public void onClick(View arg0) {
 				getGame().make();
 				listview.setAdapter(new InternalAdapter(getActivity(), getMatches()));
+			}
+		});
+		buttonMakeMatch.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View arg0) {
+				getGame().make();
+				((AppCore) getActivity()).makeMatch();
 			}
 		});
 
@@ -127,6 +136,7 @@ public class MatchFragment extends Fragment implements OnItemClickListener, AppC
             buttonStart.setVisibility(View.VISIBLE);
             buttonShuffle.setEnabled(true);
 			buttonShuffle.setVisibility(View.VISIBLE);
+			buttonMakeMatch.setVisibility(View.GONE);
 			break;
 		case READY:
 			timerview.stop();
@@ -137,42 +147,53 @@ public class MatchFragment extends Fragment implements OnItemClickListener, AppC
             buttonStart.setEnabled(true);
             buttonShuffle.setVisibility(View.VISIBLE);
 			buttonShuffle.setEnabled(false);
+			buttonMakeMatch.setVisibility(View.GONE);
 			break;
 		case PLAYING:
-		case DONE:
 			timerview.setVisibility(View.VISIBLE);
             buttonFix.setVisibility(View.GONE);
             buttonStart.setVisibility(View.GONE);
             buttonShuffle.setVisibility(View.GONE);
+			buttonMakeMatch.setVisibility(View.GONE);
+			break;
+		case DONE:
+			timerview.setVisibility(View.GONE);
+			buttonFix.setVisibility(View.GONE);
+			buttonStart.setVisibility(View.GONE);
+			buttonShuffle.setVisibility(View.GONE);
+			buttonMakeMatch.setVisibility(View.VISIBLE);
 			break;
 		}
 	}
 
 	@Override
 	public void onItemClick(final AdapterView<?> adapter, final View view,final int position, long id) {
-		if(getStatus()==STATUS.PLAYING) {
-			final Match match = (Match) adapter.getItemAtPosition(position);
-			if(!match.isBYEGame()) {
-				new ResultSelector(view.getContext(), match).show(getGame().isThreePointMatch, new ResultSelector.OnResultListener() {
-					@Override
-					public void onSelected() {
-						adapter.getAdapter().getView(position, view, listview);
-						Game game = getGame();
-						Context context = getActivity();
-						if (game.getStatus() == STATUS.DONE) {
-							timerview.stop();
-							game.make();
-							((AppCore) getActivity()).updatePlayer(AppCore.UPDATE_MODE.ADD);
-						} else {
-							((AppCore) getActivity()).updatePlayer(AppCore.UPDATE_MODE.DATA);
+		switch(getStatus()) {
+			case PLAYING: {
+				final Match match = (Match) adapter.getItemAtPosition(position);
+				if (!match.isBYEGame()) {
+					new ResultSelector(view.getContext(), match).show(getGame().isThreePointMatch, new ResultSelector.OnResultListener() {
+						@Override
+						public void onSelected() {
+							adapter.getAdapter().getView(position, view, listview);
+							Game game = getGame();
+							Context context = getActivity();
+							if (game.getStatus() == STATUS.DONE) {
+								timerview.stop();
+								buttonMakeMatch.setVisibility(View.VISIBLE);
+								//game.make();
+								((AppCore) getActivity()).updatePlayer(AppCore.UPDATE_MODE.ADD);
+							} else {
+								((AppCore) getActivity()).updatePlayer(AppCore.UPDATE_MODE.DATA);
+							}
+							try {
+								game.save(context, null);
+							} catch (IOException e) {
+								Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
+							}
 						}
-						try {
-							game.save(context, null);
-						} catch (IOException e) {
-							Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
-						}
-					}
-				});
+					});
+				}
 			}
 		}
 	}

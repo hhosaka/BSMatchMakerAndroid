@@ -51,5 +51,12 @@
             android:layout_weight="1"
             style="android:attr/ButtonBarButton"
             android:text="@string/label_shuffle" />
+        <Button
+            android:id="@+id/buttonMakeMatch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            style="android:attr/ButtonBarButton"
+            android:text="@string/label_make_match" />
     </LinearLayout>
 </LinearLayout>

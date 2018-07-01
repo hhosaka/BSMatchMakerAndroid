@@ -17,6 +17,7 @@
     <string name="label_fix">決定</string>
     <string name="label_start">開始</string>
     <string name="label_shuffle">抽選</string>
+    <string name="label_make_match">マッチング</string>
     <string name="label_player">プレーヤー</string>
     <string name="label_round">ラウンド</string>
     <string name="label_three_point_match">二本先取</string>

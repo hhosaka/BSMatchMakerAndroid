@@ -17,6 +17,7 @@
     <string name="label_fix">Fix</string>
     <string name="label_start">Start</string>
     <string name="label_shuffle">Shuffle</string>
+    <string name="label_make_match">Make</string>
     <string name="label_player">Player</string>
     <string name="label_round">Round</string>
     <string name="label_three_point_match">Three point match</string>

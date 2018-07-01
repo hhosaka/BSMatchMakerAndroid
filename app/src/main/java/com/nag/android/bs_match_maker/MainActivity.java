@@ -272,16 +272,23 @@ public class MainActivity extends Activity implements ActionBar.TabListener, App
 	}
 
 	@Override
+	public void makeMatch()
+	{
+		addTab();
+		pager.setCurrentItem(adapter.getCount() - 1);
+	}
+
+	@Override
 	public void updatePlayer(AppCore.UPDATE_MODE mode) {
 		Player.updateRank(game.getPlayers());
 		if(onupdateplayerslistener!=null){
             onupdateplayerslistener.onUpdatePlayer(game.getPlayers());
         }
         switch(mode){
-            case ADD:
-                addTab();
-				pager.setCurrentItem(adapter.getCount() - 1);
-                break;
+//            case ADD:
+//                addTab();
+//				pager.setCurrentItem(adapter.getCount() - 1);
+//                break;
             case CREATE:
                 final ActionBar actionBar = getActionBar();
 				assert(actionBar!=null);

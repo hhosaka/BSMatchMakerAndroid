@@ -13,6 +13,7 @@ public interface AppCore {
 	}
 
 	Game getGame();
+	void makeMatch();
 	void updateMatch();
 	void setOnUpdateMatchListener(OnUpdateMatchListener listener);
 	void setOnUpdatePlayersListener(OnUpdatePlayersListener listener);
