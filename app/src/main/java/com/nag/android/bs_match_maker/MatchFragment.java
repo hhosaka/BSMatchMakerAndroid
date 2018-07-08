@@ -47,7 +47,7 @@ public class MatchFragment extends Fragment implements OnItemClickListener, AppC
 	@Override
 	public void onAttach(Activity activity){
 		super.onAttach(activity);
-		((AppCore)getActivity()).setOnUpdateMatchListener(this);
+		getAppCore().setOnUpdateMatchListener(this);
 	}
 
 	private AppCore getAppCore(){
@@ -103,7 +103,7 @@ public class MatchFragment extends Fragment implements OnItemClickListener, AppC
 			@Override
 			public void onClick(View arg0) {
 				getGame().make();
-				((AppCore) getActivity()).makeMatch();
+				getAppCore().makeMatch();
 			}
 		});
 
@@ -157,6 +157,7 @@ public class MatchFragment extends Fragment implements OnItemClickListener, AppC
 			buttonMakeMatch.setVisibility(View.GONE);
 			break;
 		case DONE:
+			timerview.stop();
 			timerview.setVisibility(View.GONE);
 			buttonFix.setVisibility(View.GONE);
 			buttonStart.setVisibility(View.GONE);
@@ -168,31 +169,31 @@ public class MatchFragment extends Fragment implements OnItemClickListener, AppC
 
 	@Override
 	public void onItemClick(final AdapterView<?> adapter, final View view,final int position, long id) {
-		switch(getStatus()) {
-			case PLAYING: {
-				final Match match = (Match) adapter.getItemAtPosition(position);
-				if (!match.isBYEGame()) {
-					new ResultSelector(view.getContext(), match).show(getGame().isThreePointMatch, new ResultSelector.OnResultListener() {
-						@Override
-						public void onSelected() {
-							adapter.getAdapter().getView(position, view, listview);
-							Game game = getGame();
-							Context context = getActivity();
-							if (game.getStatus() == STATUS.DONE) {
-								timerview.stop();
-								buttonMakeMatch.setVisibility(View.VISIBLE);
-								//game.make();
-								((AppCore) getActivity()).updatePlayer(AppCore.UPDATE_MODE.ADD);
-							} else {
-								((AppCore) getActivity()).updatePlayer(AppCore.UPDATE_MODE.DATA);
+		if (getAppCore().getGame().isCurrentRound(round)) {
+			switch (getStatus()) {
+				case PLAYING:
+				case DONE: {
+					final Match match = (Match) adapter.getItemAtPosition(position);
+					if (!match.isBYEGame()) {
+						new ResultSelector(view.getContext(), match).show(getGame().isThreePointMatch, new ResultSelector.OnResultListener() {
+							@Override
+							public void onSelected() {
+								adapter.getAdapter().getView(position, view, listview);
+								setUIByStatus();
+								//							if (game.getStatus() == STATUS.DONE) {
+								//								timerview.stop();
+								//								buttonMakeMatch.setVisibility(View.VISIBLE);
+								//							}
+								Context context = getActivity();
+								getAppCore().updatePlayer();
+								try {
+									getGame().save(context, null);
+								} catch (IOException e) {
+									Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
+								}
 							}
-							try {
-								game.save(context, null);
-							} catch (IOException e) {
-								Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
-							}
-						}
-					});
+						});
+					}
 				}
 			}
 		}

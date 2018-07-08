@@ -198,4 +198,6 @@ public class Game implements Serializable{
 		}
 		return false;
 	}
+
+	public boolean isCurrentRound(int round){return rounds.size()-1 == round;}
 }

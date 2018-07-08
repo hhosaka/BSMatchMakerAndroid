@@ -87,7 +87,8 @@ public class MainActivity extends Activity implements ActionBar.TabListener, App
 				handleNavigationButtons(position, getActionBar());
 			}
 		});
-        updatePlayer(UPDATE_MODE.CREATE);
+        updatePlayer();
+		addRound();
 	}
 
 	private void handleNavigationButtons(int position, ActionBar actionBar) {
@@ -168,7 +169,8 @@ public class MainActivity extends Activity implements ActionBar.TabListener, App
 				if (filename != null) {
 					try {
 						game = Game.load(MainActivity.this, filename);
-						updatePlayer(UPDATE_MODE.CREATE);
+						updatePlayer();
+						addRound();
 					} catch (Exception e) {
 						Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
 					}
@@ -197,7 +199,8 @@ public class MainActivity extends Activity implements ActionBar.TabListener, App
 						try {
 							game = new Game(Player.create(new BufferedReader(new StringReader(list))), isThreePointMatch);
 							game.make();
-							updatePlayer(UPDATE_MODE.CREATE);
+							updatePlayer();
+							addRound();
 						}catch(Exception e){
 							Toast.makeText(MainActivity.this,e.getMessage(), Toast.LENGTH_LONG).show();
 						}
@@ -279,29 +282,23 @@ public class MainActivity extends Activity implements ActionBar.TabListener, App
 	}
 
 	@Override
-	public void updatePlayer(AppCore.UPDATE_MODE mode) {
+	public void updatePlayer() {
 		Player.updateRank(game.getPlayers());
-		if(onupdateplayerslistener!=null){
-            onupdateplayerslistener.onUpdatePlayer(game.getPlayers());
-        }
-        switch(mode){
-//            case ADD:
-//                addTab();
-//				pager.setCurrentItem(adapter.getCount() - 1);
-//                break;
-            case CREATE:
-                final ActionBar actionBar = getActionBar();
-				assert(actionBar!=null);
-                actionBar.removeAllTabs();
-                adapter = new SectionsPagerAdapter(getFragmentManager());
-                pager.setAdapter(adapter);
-                for(int i=0;i<game.getRounds().size()+1;++i){
-                    addTab();
-                }
-                break;
-			default:
-				// Do Nothing
-        }
+		if (onupdateplayerslistener != null) {
+			onupdateplayerslistener.onUpdatePlayer(game.getPlayers());
+		}
+	}
+
+	private void addRound()
+	{
+		final ActionBar actionBar = getActionBar();
+		assert(actionBar!=null);
+		actionBar.removeAllTabs();
+		adapter = new SectionsPagerAdapter(getFragmentManager());
+		pager.setAdapter(adapter);
+		for(int i=0;i<game.getRounds().size()+1;++i){
+			addTab();
+		}
 	}
 
 	@Override
@@ -320,7 +317,8 @@ public class MainActivity extends Activity implements ActionBar.TabListener, App
 	public void onCreateGame(String prefix, int num_of_player, boolean isThirdPointMatch){
 		game = new Game(Player.create(prefix, num_of_player), isThirdPointMatch);
 		game.make();
-		updatePlayer(UPDATE_MODE.CREATE);
+		updatePlayer();
+		addRound();
 	}
 
 	private void addPlayer(){
@@ -337,13 +335,11 @@ public class MainActivity extends Activity implements ActionBar.TabListener, App
 						if (!name.isEmpty()) {
 							game.addPlayer(name);
 							updateMatch();
-							updatePlayer(UPDATE_MODE.DATA);
+							updatePlayer();
 						}
 					}
 				})
 				.setNegativeButton(getString(R.string.label_cancel), null)
 				.show();
-
 	}
-
 }

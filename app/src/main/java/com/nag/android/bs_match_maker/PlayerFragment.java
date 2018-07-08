@@ -99,6 +99,8 @@ public class PlayerFragment extends Fragment implements AppCore.OnUpdatePlayersL
 		}
 	}
 
+	private AppCore getAppCore(){return((AppCore)getActivity());}
+
 	@Override
 	public void onItemClick(AdapterView<?> adapter, final View view, final int position, long id) {
 		final Player player = (Player)adapter.getItemAtPosition(position);
@@ -121,7 +123,7 @@ public class PlayerFragment extends Fragment implements AppCore.OnUpdatePlayersL
 					player.setName(editView.getText().toString());
 					player.setDropped(cb.isChecked());
 					if(cb.isChecked()!=value){
-						((AppCore)getActivity()).updateMatch();
+						getAppCore().updateMatch();
 					}
 					listview.getAdapter().getView(position, view, listview);
 				}
