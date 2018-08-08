@@ -2,10 +2,11 @@ package com.nag.android.bs_match_maker;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Fragment;
+//import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;

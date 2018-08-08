@@ -8,12 +8,13 @@ import java.util.Date;
 import java.util.Locale;
 
 import android.app.ActionBar;
+//import android.app.Activity;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
-import android.app.Fragment;
-import android.app.FragmentManager;
+//import android.app.Fragment;
+//import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.ClipData;
 import android.content.ClipDescription;
@@ -23,8 +24,12 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.net.Uri;
-import android.support.v13.app.FragmentPagerAdapter;
+//import android.support.v13.app.FragmentPagerAdapter;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.text.InputType;
 import android.view.LayoutInflater;
@@ -41,7 +46,7 @@ import android.widget.Toast;
 
 import com.nag.android.util.PreferenceHelper;
 
-public class MainActivity extends Activity implements ActionBar.TabListener, AppCore, CreateGameDialog.CreateGameHandler
+public class MainActivity extends FragmentActivity implements ActionBar.TabListener, AppCore, CreateGameDialog.CreateGameHandler
 {
 	private static final String ARG_GAME = "game";
 	private static final String PREF_IMPORT_LIST ="import_list";
@@ -294,7 +299,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener, App
 		final ActionBar actionBar = getActionBar();
 		assert(actionBar!=null);
 		actionBar.removeAllTabs();
-		adapter = new SectionsPagerAdapter(getFragmentManager());
+		adapter = new SectionsPagerAdapter(getSupportFragmentManager());
 		pager.setAdapter(adapter);
 		for(int i=0;i<game.getRounds().size()+1;++i){
 			addTab();
