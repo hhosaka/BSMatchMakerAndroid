@@ -159,7 +159,7 @@ public class Game implements Serializable{
         }
 		if (stack.size() > 0) {
 			Player p = stack.pop();
-			if(p.byeAcceptable()){
+			if(force || p.byeAcceptable()){
 				ret.add(new Match(++id, p,isThreePointMatch?2:1));
 			}
 			else{
