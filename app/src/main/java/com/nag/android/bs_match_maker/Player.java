@@ -208,16 +208,23 @@ class Player implements Serializable{
 		return false;
 	}
 
-	public boolean byeAcceptable()
+	public boolean byeAcceptable(boolean force)
 	{
 		if(matches.size()==0){
 			return true;
 		}
 		else{
-			for(Match match : matches){
-				if(match.getWinPoint(this)>0){return false;}
+			if(force){
+                for(Match match : matches){
+                    if(match.getWinPoint(this)!=3){return true;}
+                }
+                return false;
+			}else{
+                for(Match match : matches){
+                    if(match.getWinPoint(this)>0){return false;}
+                }
+                return true;
 			}
-			return true;
 		}
 	}
 	public boolean hasBye()

@@ -6,8 +6,8 @@ android {
         applicationId "com.nag.android.bs_match_maker_premium"
         minSdkVersion 19
         targetSdkVersion 28
-        versionCode 1
-        versionName "1.0"
+        versionCode 19
+        versionName "1.12.1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {

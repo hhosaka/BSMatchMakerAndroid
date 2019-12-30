@@ -104,7 +104,9 @@ public class Game implements Serializable{
                 return true;
             }
 		}
-		for(int i=0; i<MAX_TRY_COUNT; ++i){
+//		Toast.makeText(context, "通常ルールで組み合わせが作成できません。組み合わせ条件を緩和します。", Toast.LENGTH_LONG);
+
+        for(int i=0; i<MAX_TRY_COUNT; ++i){
 			Round ret = makeOne(new Player.ComparisonWinOnly(), true);
 			if(ret!=null){
 				rounds.push(ret);
@@ -159,7 +161,7 @@ public class Game implements Serializable{
         }
 		if (stack.size() > 0) {
 			Player p = stack.pop();
-			if(force || p.byeAcceptable()){
+			if(p.byeAcceptable(force)){
 				ret.add(new Match(++id, p,isThreePointMatch?2:1));
 			}
 			else{
